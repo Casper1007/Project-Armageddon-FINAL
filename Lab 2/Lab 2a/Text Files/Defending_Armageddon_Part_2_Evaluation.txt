@@ -1,0 +1,39 @@
+# Defending Armageddon Part 2: What, How, Why Evaluation
+
+This is a downloadable text version of the updated evaluation. For full details, see the markdown file in your workspace.
+
+---
+
+Date: January 22, 2026
+Project Type: Multi-tier AWS Infrastructure with Production Security Patterns
+Technology Stack: Terraform, AWS (EC2, RDS, CloudFront, WAF, VPC Endpoints, IAM), Python, Bash
+
+---
+
+Project Overview: The Big Picture
+
+This project demonstrates a progressive security hardening journey from basic cloud architecture to enterprise-grade infrastructure. It's structured as 4 interconnected labs where each builds on previous layers:
+
+Lab 1a: Foundation (EC2 ↔ RDS)
+Lab 1b: Resilience (Observability + Incident Response)
+Lab 2: Edge Security (CloudFront + WAF + Origin Cloaking)
+Bonus-A: Hardening (Zero Internet Exposure + VPC Endpoints)
+
+---
+
+Each lab includes:
+- WHAT was built (infrastructure, code, security)
+- HOW it was implemented (Terraform, Python, Bash)
+- WHY these decisions were made (security, compliance, real-world patterns)
+
+---
+
+See the markdown file for:
+- Full code and Terraform patterns
+- Security and architecture explanations
+- Verification and automation details
+- Interview-ready summary table and talking points
+
+---
+
+For the complete, formatted version, open Defending_Armageddon_Part_2_Evaluation_REVISED.md in your workspace.

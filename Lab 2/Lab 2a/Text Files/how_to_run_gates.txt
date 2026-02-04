@@ -1,0 +1,11 @@
+chmod +x run_all_gates.sh
+
+ORIGIN_REGION=us-east-1 \
+CF_DISTRIBUTION_ID=E1ABCDEF234567 \
+DOMAIN_NAME=chewbacca-growls.com \
+ROUTE53_ZONE_ID=Z123ABC456DEF \
+ACM_CERT_ARN=arn:aws:acm:us-east-1:200819971986:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
+WAF_WEB_ACL_ARN=arn:aws:wafv2:us-east-1:200819971986:global/webacl/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
+LOG_BUCKET=chewbacca-logs \
+ORIGIN_SG_ID=sg-0123456789abcdef0 \
+./run_all_gates.sh
