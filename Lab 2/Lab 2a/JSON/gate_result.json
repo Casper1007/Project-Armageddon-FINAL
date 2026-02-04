@@ -1,14 +1,14 @@
 {
   "suite": "Lab 1a Complete Verification",
-  "timestamp": "2026-01-21T05:28:17Z",
+  "timestamp": "2026-02-02T20:43:31Z",
   "region": "us-east-1",
-  "instance_id": "i-0968fd41f8aaa43eb",
+  "instance_id": "i-0d24fcd824ddbdd0c",
   "secret_id": "lab1a/rds/mysql",
   "db_id": "chrisbarm-rds01",
   "tests": {
     "gate_secrets_and_role": {
       "test": "gate_secrets_and_role",
-      "timestamp": "2026-01-21T05:28:02Z",
+      "timestamp": "2026-02-02T20:43:16Z",
       "passed": true,
       "errors": [],
       "checks": {
@@ -22,7 +22,7 @@
         },
         "secret_exists": {
           "status": "pass",
-          "details": "Secret ARN: arn:aws:secretsmanager:us-east-1:198547498722:secret:lab1a/rds/mysql-9Xs8hU"
+          "details": "Secret ARN: arn:aws:secretsmanager:us-east-1:198547498722:secret:lab1a/rds/mysql-0ad1ux"
         },
         "secret_has_credentials": {
           "status": "pass",
@@ -32,7 +32,7 @@
     },
     "gate_network_db": {
       "test": "gate_network_db",
-      "timestamp": "2026-01-21T05:28:10Z",
+      "timestamp": "2026-02-02T20:43:24Z",
       "passed": true,
       "errors": [],
       "checks": {
@@ -46,15 +46,15 @@
         },
         "rds_has_security_group": {
           "status": "pass",
-          "details": "Security Groups: sg-09253c24b2eee0c11\r "
+          "details": "Security Groups: sg-00c4a42158a0e217e\r "
         },
         "vpcs_same": {
           "status": "pass",
-          "details": "Both in VPC: vpc-0f2ad42c2c13e8707"
+          "details": "Both in VPC: vpc-02709f3087724afb0"
         },
         "rds_sg_to_sg_rule_exists": {
           "status": "pass",
-          "details": "EC2 SG sg-0059285ecdea5d41d has ingress to RDS SG sg-09253c24b2eee0c11"
+          "details": "EC2 SG sg-09ab009d3d15bf0b1 has ingress to RDS SG sg-00c4a42158a0e217e"
         },
         "rds_port_identified": {
           "status": "pass",

@@ -1,0 +1,8 @@
+{
+  "scenario": "database_interruption",
+  "timestamp": "2026-02-02T21:37:59Z",
+  "region": "us-east-1",
+  "db_instance": "chrisbarm-rds01",
+  "action_taken": "stop_db_instance",
+  "notes": "RDS instance stopped. Application cannot reach database endpoint. Restart required for recovery."
+}
