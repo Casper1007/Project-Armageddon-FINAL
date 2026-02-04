@@ -1,0 +1,11 @@
+{
+  "scenario": "network_isolation",
+  "timestamp": "2026-02-02T21:34:43Z",
+  "region": "us-east-1",
+  "rds_security_group": "sg-00c4a42158a0e217e",
+  "ec2_security_group": "sg-0059285ecdea5d41d",
+  "revoked_group_ids": ["sg-09ab009d3d15bf0b1" ,"sg-0f7829ad38af69ff6"],
+  "port": 3306,
+  "action_taken": "revoke_ingress",
+  "notes": "Revoked EC2 security group access to RDS on port 3306. Connection will timeout."
+}
