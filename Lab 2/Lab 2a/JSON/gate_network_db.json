@@ -1,0 +1,36 @@
+{
+  "test": "gate_network_db",
+  "timestamp": "2026-01-21T05:28:10Z",
+  "passed": true,
+  "errors": [],
+  "checks": {
+    "rds_instance_exists": {
+      "status": "pass",
+      "details": "DB ID: chrisbarm-rds01"
+    },
+    "rds_not_publicly_accessible": {
+      "status": "pass",
+      "details": "PubliclyAccessible: false"
+    },
+    "rds_has_security_group": {
+      "status": "pass",
+      "details": "Security Groups: sg-09253c24b2eee0c11\r "
+    },
+    "vpcs_same": {
+      "status": "pass",
+      "details": "Both in VPC: vpc-0f2ad42c2c13e8707"
+    },
+    "rds_sg_to_sg_rule_exists": {
+      "status": "pass",
+      "details": "EC2 SG sg-0059285ecdea5d41d has ingress to RDS SG sg-09253c24b2eee0c11"
+    },
+    "rds_port_identified": {
+      "status": "pass",
+      "details": "Port: 3306"
+    },
+    "rds_port_in_sg_rule": {
+      "status": "pass",
+      "details": "Port 3306 in SG ingress rule"
+    }
+  }
+}
