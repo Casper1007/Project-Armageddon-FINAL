@@ -59,11 +59,11 @@ test_alb_direct_access() {
   
   # Get ALB DNS name
   ALB_DNS=$(aws elbv2 describe-load-balancers \
-    --query 'LoadBalancers[?LoadBalancerName==`chewbacca-alb01`].DNSName' \
+    --query 'LoadBalancers[?LoadBalancerName==`chrisbarm-alb01`].DNSName' \
     --output text 2>/dev/null) || ALB_DNS="UNKNOWN"
   
   if [ "$ALB_DNS" = "UNKNOWN" ] || [ -z "$ALB_DNS" ]; then
-    log_failure "Could not find ALB DNS name (chewbacca-alb01)"
+    log_failure "Could not find ALB DNS name (chrisbarm-alb01)"
     return 1
   fi
   
@@ -94,9 +94,9 @@ test_cloudfront_access() {
   log_info "TEST 2: CloudFront access should succeed (200 OK)"
   
   DOMAIN=$(aws ssm get-parameter \
-    --name /chewbacca/domain_name \
+    --name /chrisbarm/domain_name \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null || echo "chewbacca-growl.com")
+    --output text 2>/dev/null || echo "chrisbdevsecops.com")
   
   log_info "Domain: $DOMAIN"
   
@@ -134,9 +134,9 @@ test_dns_configuration() {
   log_info "TEST 3: DNS should point to CloudFront (not ALB)"
   
   DOMAIN=$(aws ssm get-parameter \
-    --name /chewbacca/domain_name \
+    --name /chrisbarm/domain_name \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null || echo "chewbacca-growl.com")
+    --output text 2>/dev/null || echo "chrisbdevsecops.com")
   
   # Resolve DNS
   DNS_RESULT=$(dig "$DOMAIN" A +short 2>/dev/null | head -1)
@@ -150,7 +150,7 @@ test_dns_configuration() {
   
   # Get ALB IP (for comparison)
   ALB_IP=$(aws elbv2 describe-load-balancers \
-    --query 'LoadBalancers[?LoadBalancerName==`chewbacca-alb01`].LoadBalancerAddresses[0].IpAddress' \
+    --query 'LoadBalancers[?LoadBalancerName==`chrisbarm-alb01`].LoadBalancerAddresses[0].IpAddress' \
     --output text 2>/dev/null || echo "UNKNOWN")
   
   if [ "$ALB_IP" = "UNKNOWN" ]; then
@@ -201,9 +201,9 @@ test_waf_scope() {
   
   # Get CloudFront distribution and verify WAF attachment
   DOMAIN=$(aws ssm get-parameter \
-    --name /chewbacca/domain_name \
+    --name /chrisbarm/domain_name \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null || echo "chewbacca-growl.com")
+    --output text 2>/dev/null || echo "chrisbdevsecops.com")
   
   CF_DISTRIBUTION=$(aws cloudfront list-distributions \
     --query "DistributionList.Items[?Aliases.Items[0]=='$DOMAIN'].Id" \
@@ -243,7 +243,7 @@ test_origin_header() {
   
   # Get ALB DNS
   ALB_DNS=$(aws elbv2 describe-load-balancers \
-    --query 'LoadBalancers[?LoadBalancerName==`chewbacca-alb01`].DNSName' \
+    --query 'LoadBalancers[?LoadBalancerName==`chrisbarm-alb01`].DNSName' \
     --output text 2>/dev/null) || ALB_DNS="UNKNOWN"
   
   if [ "$ALB_DNS" = "UNKNOWN" ]; then
@@ -253,7 +253,7 @@ test_origin_header() {
   
   # Try to spoof origin header with wrong value
   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 \
-    -H "X-Chewbacca-Growl: fake-secret-value" \
+    -H "X-Chrisbarm-Growl: fake-secret-value" \
     https://"$ALB_DNS" 2>/dev/null || echo "000")
   
   if [ "$HTTP_CODE" = "403" ]; then
@@ -274,9 +274,9 @@ test_cloudfront_caching() {
   log_info "BONUS TEST: CloudFront cache behavior"
   
   DOMAIN=$(aws ssm get-parameter \
-    --name /chewbacca/domain_name \
+    --name /chrisbarm/domain_name \
     --query 'Parameter.Value' \
-    --output text 2>/dev/null || echo "chewbacca-growl.com")
+    --output text 2>/dev/null || echo "chrisbdevsecops.com")
   
   # Make two requests and check for CloudFront headers
   RESPONSE=$(curl -s -I https://"$DOMAIN" 2>/dev/null || echo "")

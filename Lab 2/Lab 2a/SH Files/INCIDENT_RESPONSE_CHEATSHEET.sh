@@ -70,7 +70,7 @@ STEP 5: VERIFY RECOVERY
 
 # Check Alarm State
 aws cloudwatch describe-alarms \
-  --alarm-name "$ALARM_NAME" \
+  --alarm-names "$ALARM_NAME" \
   --region "$REGION" \
   --query "MetricAlarms[0].StateValue" \
   --output text
@@ -110,7 +110,7 @@ aws logs tail "$LOG_GROUP" --follow --region "$REGION"
 
 # Check alarm (run every 30 seconds)
 aws cloudwatch describe-alarms \
-  --alarm-name "$ALARM_NAME" \
+  --alarm-names "$ALARM_NAME" \
   --region "$REGION" | jq '.MetricAlarms[0] | {State: .StateValue, Updated: .StateUpdatedTime}'
 
 # Get Parameter Store values

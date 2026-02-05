@@ -48,7 +48,7 @@ echo "1.1 Confirm Alert is Active"
 echo ""
 
 ALARM_STATE=$(aws cloudwatch describe-alarms \
-  --alarm-name "$ALARM_NAME" \
+  --alarm-names "$ALARM_NAME" \
   --region "$REGION" \
   --query "MetricAlarms[0].StateValue" \
   --output text 2>/dev/null)
@@ -184,7 +184,7 @@ if [ -n "$SECRET" ]; then
   echo "$SECRET" | jq 'keys' 2>/dev/null || echo "  (Could not parse as JSON)"
   echo ""
   echo "Secret Fields (values masked):"
-  echo "$SECRET" | jq 'with_entries(.value = if .value | type == "string" then (.[:3] + "****") else .value end)' 2>/dev/null
+  echo "$SECRET" | jq 'with_entries(.value = if .value | type == "string" then (.[:3] + "****") else .value end)' 2>/dev/null || echo "  (Masking skipped)"
 else
   echo "✗ FAIL: Could not retrieve secret"
 fi
@@ -306,7 +306,7 @@ echo "════════════════════════�
 echo ""
 echo "6.1 Confirm Alarm Clears"
 echo ""
-echo "  Run: aws cloudwatch describe-alarms --alarm-name $ALARM_NAME"
+echo "  Run: aws cloudwatch describe-alarms --alarm-names $ALARM_NAME"
 echo ""
 echo "  Expected: StateValue = OK"
 echo ""

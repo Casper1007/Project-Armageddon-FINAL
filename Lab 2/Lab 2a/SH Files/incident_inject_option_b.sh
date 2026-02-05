@@ -16,6 +16,31 @@ REGION="${REGION:-us-east-1}"
 RDS_SG="${RDS_SG:-sg-09253c24b2eee0c11}"
 EC2_SG="${EC2_SG:-sg-0059285ecdea5d41d}"
 
+# Resolve RDS security group if the default is invalid
+if ! aws ec2 describe-security-groups --group-ids "$RDS_SG" --region "$REGION" --output text >/dev/null 2>&1; then
+  RDS_SG=$(aws ec2 describe-security-groups \
+    --filters "Name=group-name,Values=chrisbarm-rds-sg01" \
+    --region "$REGION" \
+    --query "SecurityGroups[0].GroupId" \
+    --output text 2>/dev/null)
+fi
+
+# Resolve EC2 security group from current RDS ingress (if present)
+if [ -z "$EC2_SG" ] || [ "$EC2_SG" = "None" ]; then
+  EC2_SG=$(aws ec2 describe-security-groups \
+    --group-ids "$RDS_SG" \
+    --region "$REGION" \
+    --query "SecurityGroups[0].IpPermissions[?FromPort==\`3306\`].UserIdGroupPairs[0].GroupId | [0]" \
+    --output text 2>/dev/null)
+fi
+
+# Collect all SGs currently allowed on port 3306 for rollback
+EXISTING_SG_IDS=$(aws ec2 describe-security-groups \
+  --group-ids "$RDS_SG" \
+  --region "$REGION" \
+  --query "SecurityGroups[0].IpPermissions[?FromPort==\`3306\`].UserIdGroupPairs[].GroupId" \
+  --output text 2>/dev/null)
+
 echo "============================================"
 echo "Incident Injection: Option B — Network Isolation"
 echo "============================================"
@@ -47,22 +72,19 @@ aws ec2 describe-security-groups \
 echo ""
 echo "[2/3] Revoking EC2 security group access to RDS..."
 
-# Get the current rule details
-RULE_DETAILS=$(aws ec2 describe-security-groups \
-  --group-ids "$RDS_SG" \
-  --region "$REGION" \
-  --query "SecurityGroups[0].IpPermissions[?FromPort==\`3306\`][0]" \
-  --output json)
-
-# Revoke the rule
-aws ec2 revoke-security-group-ingress \
-  --group-id "$RDS_SG" \
-  --region "$REGION" \
-  --protocol tcp \
-  --port 3306 \
-  --source-security-group-id "$EC2_SG" > /dev/null 2>&1 || true
-
-echo "✓ EC2→RDS access revoked on port 3306"
+if [ -n "$EXISTING_SG_IDS" ]; then
+  for SG_ID in $EXISTING_SG_IDS; do
+    aws ec2 revoke-security-group-ingress \
+      --group-id "$RDS_SG" \
+      --region "$REGION" \
+      --protocol tcp \
+      --port 3306 \
+      --source-group "$SG_ID" > /dev/null 2>&1 || true
+  done
+  echo "✓ EC2→RDS access revoked on port 3306"
+else
+  echo "⚠ Warning: No existing EC2 SG rules found on port 3306"
+fi
 
 # ============================================================================
 # Step 3: Verify rule is gone
@@ -101,7 +123,7 @@ echo "  - SNS notification sent"
 echo ""
 echo "Next: Monitor CloudWatch Logs and Alarms"
 echo "  aws logs tail /aws/ec2/lab-rds-app --follow"
-echo "  aws cloudwatch describe-alarms --alarm-name lab-db-connection-failure"
+echo "  aws cloudwatch describe-alarms --alarm-names lab-db-connection-failure"
 echo ""
 
 # ============================================================================
@@ -115,6 +137,7 @@ cat > "$INCIDENT_STATE_FILE" <<EOF
   "region": "$REGION",
   "rds_security_group": "$RDS_SG",
   "ec2_security_group": "$EC2_SG",
+  "revoked_group_ids": [$(echo "$EXISTING_SG_IDS" | awk '{for (i=1; i<=NF; i++) printf "%s\"%s\"", (i==1?"":" ,"), $i}')],
   "port": 3306,
   "action_taken": "revoke_ingress",
   "notes": "Revoked EC2 security group access to RDS on port 3306. Connection will timeout."

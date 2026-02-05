@@ -48,7 +48,8 @@ echo "Current secret retrieved"
 # ============================================================================
 echo ""
 echo "[2/3] Generating new password..."
-NEW_PASSWORD=$(openssl rand -base64 16)
+# Use only alphanumeric characters to satisfy RDS password constraints.
+NEW_PASSWORD=$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16)
 echo "Generated new password: ${NEW_PASSWORD:0:8}****"
 
 # ============================================================================
@@ -84,7 +85,7 @@ echo "  - SNS notification sent"
 echo ""
 echo "Next: Monitor CloudWatch Logs and Alarms"
 echo "  aws logs tail /aws/ec2/lab-rds-app --follow"
-echo "  aws cloudwatch describe-alarms --alarm-name lab-db-connection-failure"
+echo "  aws cloudwatch describe-alarms --alarm-names lab-db-connection-failure"
 echo ""
 
 # ============================================================================

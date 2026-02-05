@@ -42,7 +42,24 @@ echo ""
 # ============================================================================
 # Step 2: Start the RDS instance if stopped
 # ============================================================================
-if [ "$RDS_STATUS" = "stopped" ] || [ "$RDS_STATUS" = "stopping" ]; then
+if [ "$RDS_STATUS" = "stopping" ]; then
+  echo "[2/3] RDS is stopping — waiting for stop to complete..."
+  echo ""
+  for i in {1..30}; do
+    sleep 10
+    RDS_STATUS=$(aws rds describe-db-instances \
+      --db-instance-identifier "$DB_INSTANCE" \
+      --region "$REGION" \
+      --query "DBInstances[0].DBInstanceStatus" \
+      --output text)
+    echo "  Status: $RDS_STATUS"
+    if [ "$RDS_STATUS" != "stopping" ]; then
+      break
+    fi
+  done
+fi
+
+if [ "$RDS_STATUS" = "stopped" ]; then
   echo "[2/3] Starting RDS instance..."
   echo ""
   
@@ -53,8 +70,11 @@ if [ "$RDS_STATUS" = "stopped" ] || [ "$RDS_STATUS" = "stopping" ]; then
   echo "✓ Start command sent to RDS"
   echo "  (Startup typically takes 2-5 minutes)"
   echo ""
-else
+elif [ "$RDS_STATUS" = "available" ]; then
   echo "[2/3] RDS is already running (status: $RDS_STATUS)"
+  echo ""
+else
+  echo "[2/3] RDS not startable yet (status: $RDS_STATUS)"
   echo ""
 fi
 
@@ -117,7 +137,7 @@ echo "  1. Application will retry connection automatically"
 echo "  2. Connection should succeed within 30 seconds"
 echo ""
 echo "  3. Monitor alarm state:"
-echo "     aws cloudwatch describe-alarms --alarm-name lab-db-connection-failure"
+echo "     aws cloudwatch describe-alarms --alarm-names lab-db-connection-failure"
 echo ""
 echo "  4. Check logs for recovery:"
 echo "     aws logs tail /aws/ec2/chrisbarm-rds-app --follow"
