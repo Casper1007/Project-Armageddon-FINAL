@@ -228,7 +228,7 @@ resource "aws_security_group" "chrisbarm_rds_sg01" {
   }
 }
 
-# TODO: student adds inbound MySQL 3306 from aws_security_group.chrisbarm_ec2_sg01.id
+# student adds inbound MySQL 3306 from aws_security_group.chrisbarm_ec2_sg01.id
 
 resource "aws_vpc_security_group_ingress_rule" "chrisbarm_rds_sg_ingress_mysql" {
   ip_protocol                  = local.tcp_protocol
@@ -277,7 +277,7 @@ resource "aws_db_instance" "chrisbarm_rds01" {
   publicly_accessible = false
   skip_final_snapshot = true
 
-  # TODO: student sets multi_az / backups / monitoring as stretch goals
+  # student sets multi_az / backups / monitoring as stretch goals
 
   tags = {
     Name = "${local.name_prefix}-rds01"
@@ -392,7 +392,7 @@ resource "aws_instance" "chrisbarm_bastion_host_ec2_02" {
   # user_data_replace_on_change = true
   associate_public_ip_address = true
 
-  # TODO: student supplies user_data to install app + CW agent + configure log shipping
+  # student supplies user_data to install app + CW agent + configure log shipping
   // user_data  = file("${path.module}/1a_user_data.sh")
   # depends_on = [aws_db_instance.satellite_rds01]
 
@@ -409,7 +409,7 @@ resource "aws_instance" "chrisbarm_ec2_01" {
   user_data_replace_on_change = true
   associate_public_ip_address = true
 
-  # TODO: student supplies user_data to install app + CW agent + configure log shipping
+  # student supplies user_data to install app + CW agent + configure log shipping
   user_data  = file("${path.module}/1a_user_data.sh")
   depends_on = [aws_db_instance.chrisbarm_rds01]
 
@@ -426,7 +426,7 @@ resource "aws_instance" "chrisbarm_ec2_03" {
   #user_data_replace_on_change = true
   associate_public_ip_address = false
   key_name                    = var.key_name
-  # TODO: student supplies user_data to install app + CW agent + configure log shipping
+  # student supplies user_data to install app + CW agent + configure log shipping
   #user_data  = file("${path.module}/1a_user_data.sh")
   # depends_on = [aws_db_instance.satellite_rds01]
 
@@ -566,5 +566,5 @@ resource "aws_sns_topic_subscription" "chrisbarm_sns_sub01" {
 ############################################
 
 # Explanation: Endpoints keep traffic inside AWS like hyperspace lanes—less exposure, more control.
-# TODO: students can add endpoints for SSM, Logs, Secrets Manager if doing “no public egress” variant.
+# students can add endpoints for SSM, Logs, Secrets Manager if doing “no public egress” variant.
 # resource "aws_vpc_endpoint" "satellite_vpce_ssm" { ... }
