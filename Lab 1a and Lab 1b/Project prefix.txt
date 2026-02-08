@@ -1,0 +1,38 @@
+
+- Project prefix: chrisbarm
+- EC2 instance Name tag: chrisbarm-ec2_01
+- EC2 security group name: chrisbarm-ec2-sg01
+- RDS security group name: chrisbarm-rds-sg01
+- RDS identifier: chrisbarm-rds01
+- Secret name: lab1a/rds/mysql (name prefix, full suffix may vary)
+
+Optional: find IDs quickly with AWS CLI (run from your workstation):
+```
+REGION=us-east-1
+
+# EC2 instance ID by Name tag
+aws ec2 describe-instances \
+  --region " us-east-1" \
+  --filters Name=tag:Name,Values=chrisbarm-ec2_01 \
+  --query "Reservations[].Instances[].InstanceId" \        i-04fec5a6b697c4bc3
+  
+
+# EC2 security group ID by name
+aws ec2 describe-security-groups \
+  --region " us-east-1" \
+  --filters Name=group-name,Values=chrisbarm-ec2-sg01 \
+  --query "SecurityGroups[].GroupId" \
+  --output text            sg-062f1bd96f3f3c46a
+
+# RDS security group ID by name
+aws ec2 describe-security-groups \
+  --region " us-east-1" \
+  --filters Name=group-name,Values=chrisbarm-rds-sg01 \
+  --query "SecurityGroups[].GroupId" \
+  --output text           sg-0355cf436bb208eef     sg-08d0d3802a9f87fca
+
+# Secret ARN by name prefix
+aws secretsmanager list-secrets \
+  --region " us-east-1" \
+  --query "SecretList[?starts_with(Name, 'lab1a/rds/mysql')].ARN" \
+  --output text          arn:aws:secretsmanager:us-east-1:198547498722:secret:lab1a/rds/mysql-TLmBzj
