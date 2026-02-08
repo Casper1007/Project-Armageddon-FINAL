@@ -1,0 +1,123 @@
+Lab 1b Incident Final Analysis
+==============================
+
+Incident Summary
+----------------
+- Incident title: Database Connectivity Failure — Production Application Unavailable
+- Impact: Application `/list` intermittently failed or timed out due to DB connectivity issues.
+- Scope: EC2 app host + RDS MySQL instance in us-east-1.
+
+What Failed
+-----------
+- Database connectivity for the application.
+- Root causes were simulated via incident injections:
+- Secret drift: Secrets Manager password updated without matching RDS password.
+- Network isolation: EC2 security group access to RDS removed on port 3306.
+- Database interruption: RDS instance stopped.
+
+How It Was Detected
+------------------
+- CloudWatch Logs showed ERROR entries for DB connection failures.
+- CloudWatch Alarm `lab-db-connection-failure` transitioned to ALARM.
+- Application endpoint `/list` failed or hung.
+
+Root Cause
+----------
+- Primary causes were injected for lab validation:
+- Credentials mismatch (secret drift).
+- Missing EC2 -> RDS security group rule (network isolation).
+- RDS instance not running (DB interruption).
+
+Recovery Actions Taken
+----------------------
+- Verified configuration sources in Parameter Store and Secrets Manager.
+- Restored correct DB credentials alignment (Secrets Manager vs RDS).
+- Re-added EC2 -> RDS SG rule on port 3306.
+- Restarted RDS instance and waited for availability.
+- Verified application recovery via `/list` endpoint.
+
+Time to Recovery
+----------------
+- Recovery time depends on scenario:
+- Secret drift: ~2-3 minutes (update RDS password).
+- Network isolation: ~1-2 minutes (restore SG rule).
+- DB interruption: ~3-5 minutes (start RDS).
+
+Preventive Actions
+------------------
+- Enable or validate secret rotation workflow end-to-end (update DB and app together).
+- Add guardrails to detect or block SG rule drift on RDS.
+
+Reflection Answers
+------------------
+A) Parameter Store still exists alongside Secrets Manager because it is ideal for non-rotating configuration and shared app parameters, while Secrets Manager is optimized for rotating credentials and auditability.
+
+B) During secret rotation, the application typically breaks first if it reads a new password before the database is updated (credential drift).
+
+C) Alarms should be based on symptoms because multiple root causes produce the same observable failure, and symptoms are what users experience.
+
+D) This lab reduces MTTR by forcing diagnosis via logs and stored configuration, eliminating redeploys and guesswork.
+
+E) Automate the next step with a Lambda or SSM Automation triggered by the alarm to classify the incident, remediate, and notify.
+
+Incident A — Secret Drift (Final Analysis)
+------------------------------------------
+Summary:
+- Trigger: Secrets Manager password changed; RDS password unchanged.
+- Impact: Application authentication failed with "Access denied" errors.
+
+Detection:
+- CloudWatch Logs showed DB auth failures.
+- Alarm transitioned to ALARM after repeated errors.
+
+Root Cause:
+- Credential drift between Secrets Manager and RDS.
+
+Recovery:
+- Updated RDS password to match Secrets Manager value.
+- Verified connectivity and `/list` returns data.
+
+Recovery Time:
+- ~2-3 minutes (update RDS password)
+
+
+Incident B — Network Isolation (Final Analysis)
+-----------------------------------------------
+Summary:
+- Trigger: EC2 security group rule removed from RDS inbound on TCP 3306.
+- Impact: Connection timeouts to the database.
+
+Detection:
+- CloudWatch Logs showed connection timeout errors.
+- Alarm transitioned to ALARM from DB connection failures.
+
+Root Cause:
+- Missing EC2 -> RDS security group rule.
+
+Recovery:
+- Re-authorized EC2 SG access to RDS on port 3306.
+- Verified DB connectivity and `/list` returns data.
+
+Recovery Time:
+- ~1-2 minutes (restore SG rule)
+
+
+Incident C — Database Interruption (Final Analysis)
+---------------------------------------------------
+Summary:
+- Trigger: RDS instance stopped.
+- Impact: Database endpoint unreachable; application fails immediately.
+
+Detection:
+- CloudWatch Logs showed connection errors to the DB endpoint.
+- Alarm transitioned to ALARM after repeated failures.
+
+Root Cause:
+- RDS instance in stopped state.
+
+Recovery:
+- Started the RDS instance and waited for available.
+- Verified application recovery via `/list`.
+
+Recovery Time:
+- ~3-5 minutes (start RDS and wait for available)
