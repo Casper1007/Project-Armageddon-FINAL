@@ -1,0 +1,194 @@
+## Bonus-E WAF Logging Verification Outputs
+
+### A) Confirm WAF logging is enabled
+Command:
+```bash
+aws wafv2 get-logging-configuration --region us-east-1 \
+	--resource-arn arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f
+```
+Output:
+```json
+{
+	"LoggingConfiguration": {
+		"ResourceArn": "arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f",
+		"LogDestinationConfigs": [
+			"arn:aws:logs:us-east-1:198547498722:log-group:aws-waf-logs-chrisbarm-webacl01"
+		],
+		"ManagedByFirewallManager": false,
+		"LogType": "WAF_LOGS",
+		"LogScope": "CUSTOMER"
+	}
+}
+```
+
+### B) Generate traffic
+Command:
+```bash
+curl -I https://chrisbdevsecops.com/
+```
+Output:
+```text
+HTTP/1.1 302 Found
+Content-Type: text/html
+Connection: keep-alive
+X-WS-RateLimit-Limit: 1000
+X-WS-RateLimit-Remaining: 999
+Date: Mon, 09 Feb 2026 22:34:22 GMT
+Server: Apache
+Cache-Control: no-cache
+Location: https://www.facebook.com/casperusf
+```
+
+Command:
+```bash
+curl -I https://app.chrisbdevsecops.com/
+```
+Output:
+```text
+curl: (35) Recv failure: Connection was reset
+```
+
+### C1) CloudWatch Logs destination
+Command:
+```bash
+MSYS_NO_PATHCONV=1 aws logs describe-log-streams --region us-east-1 \
+	--log-group-name aws-waf-logs-chrisbarm-webacl01 \
+	--order-by LastEventTime --descending
+```
+Output:
+```json
+{
+	"logStreams": [
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"creationTime": 1770672542566,
+			"firstEventTimestamp": 1770672528485,
+			"lastEventTimestamp": 1770673834159,
+			"lastIngestionTime": 1770673849627,
+			"uploadSequenceToken": "49039859661337695795925823879546396981807581123565770218",
+			"arn": "arn:aws:logs:us-east-1:198547498722:log-group:aws-waf-logs-chrisbarm-webacl01:log-stream:us-east-1_chrisbarm-alb-waf01_0",
+			"storedBytes": 0
+		}
+	]
+}
+```
+
+Command:
+```bash
+MSYS_NO_PATHCONV=1 aws logs filter-log-events --region us-east-1 \
+	--log-group-name aws-waf-logs-chrisbarm-webacl01 \
+	--max-items 20
+```
+Output:
+```json
+{
+	"events": [
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770672528485,
+			"message": "{\"timestamp\":1770672528485,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"43.167.239.66\",\"country\":\"JP\",\"headers\":[{\"name\":\"Host\",\"value\":\"52.21.0.222\"},{\"name\":\"User-Agent\",\"value\":\"Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1\"},{\"name\":\"Accept\",\"value\":\"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"},{\"name\":\"Accept-Language\",\"value\":\"zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7\"},{\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Pragma\",\"value\":\"no-cache\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Connection\",\"value\":\"close\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5190-7929fb7e468a4edb551998d2\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"52.21.0.222\"}}",
+			"ingestionTime": 1770672542603,
+			"eventId": "39487316887781941786866316054606777815170766135175872512"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770672529496,
+			"message": "{\"timestamp\":1770672529496,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"43.167.239.66\",\"country\":\"JP\",\"headers\":[{\"name\":\"Host\",\"value\":\"52.21.0.222\"},{\"name\":\"User-Agent\",\"value\":\"Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1\"},{\"name\":\"Accept\",\"value\":\"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"},{\"name\":\"Accept-Language\",\"value\":\"zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7\"},{\"name\":\"Cache-Control\",\"value\":\"no-cache\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Pragma\",\"value\":\"no-cache\"},{\"name\":\"Referer\",\"value\":\"http://52.21.0.222:80\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Connection\",\"value\":\"close\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5191-2079d1986af092ab62919a0b\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"52.21.0.222\"},\"ja3Fingerprint\":\"6639916abfac56b9257ca216677085bc\",\"ja4Fingerprint\":\"t13i130900_f57a46bbacb6_e7c285222651\"}",
+			"ingestionTime": 1770672545750,
+			"eventId": "39487316910327995182580776054503915662113855660059852800"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770672743626,
+			"message": "{\"timestamp\":1770672743626,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"198.235.24.128\",\"country\":\"US\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"User-Agent\",\"value\":\"Hello from Palo Alto Networks, find out more about our scans in https://docs-cortex.paloaltonetworks.com/r/1/Cortex-Xpanse/Scanning-activity\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5267-2ce064c035f245c56fce67bb\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"35.172.79.222\"}}",
+			"ingestionTime": 1770672755968,
+			"eventId": "39487321685586564543943109605684855396441803425606729728"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770672743968,
+			"message": "{\"timestamp\":1770672743968,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"198.235.24.128\",\"country\":\"US\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"User-Agent\",\"value\":\"Hello from Palo Alto Networks, find out more about our scans in https://docs-cortex.paloaltonetworks.com/r/1/Cortex-Xpanse/Scanning-activity\"},{\"name\":\"Referer\",\"value\":\"http://35.172.79.222:80/\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5267-04d6463b634c48c57696c28f\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"ja3Fingerprint\":\"19e29534fd49dd27d09234e639c4057e\",\"ja4Fingerprint\":\"t13i190800_9dc949149365_97f8aa674fd9\"}",
+			"ingestionTime": 1770672754416,
+			"eventId": "39487321693213419401840582718214068201160543457103249408"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673430066,
+			"message": "{\"timestamp\":1770673430066,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"172.202.117.213\",\"country\":\"US\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"User-Agent\",\"value\":\"Mozilla/5.0 zgrab/0.x\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"}],\"uri\":\"/owa/auth/logon.aspx\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5516-6a0fb5902e83eee7069e2853\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"ja3Fingerprint\":\"cba7f34191ef2379c1325641f6c6c4f4\",\"ja4Fingerprint\":\"t12i130500_2d7513195f68_e51b7354d87f\"}",
+			"ingestionTime": 1770673448337,
+			"eventId": "39487336993710098623304059718486443439515286347622842368"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673615154,
+			"message": "{\"timestamp\":1770673615154,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"205.210.31.224\",\"country\":\"US\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"User-Agent\",\"value\":\"Hello from Palo Alto Networks, find out more about our scans in https://docs-cortex.paloaltonetworks.com/r/1/Cortex-Xpanse/Scanning-activity\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a55cf-748ea8770e7856981e8ed63c\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"ja3Fingerprint\":\"19e29534fd49dd27d09234e639c4057e\",\"ja4Fingerprint\":\"t13i190800_9dc949149365_97f8aa674fd9\"}",
+			"ingestionTime": 1770673630957,
+			"eventId": "39487341121310425928940035959823480150223022395054227456"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673829468,
+			"message": "{\"timestamp\":1770673829468,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\",\"value\":\"libredtail-http\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded\"},{\"name\":\"Content-Length\",\"value\":\"241\"}],\"uri\":\"/hello.world\",\"args\":\"%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"POST\",\"requestId\":\"1-698a56a5-7da43ad1695ee2762e64907c\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"35.172.79.222\"},\"requestBodySize\":241,\"requestBodySizeInspectedByWAF\":241}",
+			"ingestionTime": 1770673842172,
+			"eventId": "39487345900672332406832004170252642925834901908213465088"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673833621,
+			"message": "{\"timestamp\":1770673833621,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\",\"value\":\"libredtail-http\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded\"},{\"name\":\"Content-Length\",\"value\":\"241\"}],\"uri\":\"/hello.world\",\"args\":\"%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"POST\",\"requestId\":\"1-698a56a9-1856b101438c123d212a9708\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"requestBodySize\":241,\"requestBodySizeInspectedByWAF\":241,\"ja3Fingerprint\":\"7041540a5e44ce9a1d4200c4214355aa\",\"ja4Fingerprint\":\"t13i170900_5b57614c22b0_78e6aca7449b\"}",
+			"ingestionTime": 1770673846423,
+			"eventId": "39487345993287327216329682082189500212441353941205057536"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673833892,
+			"message": "{\"timestamp\":1770673833892,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\",\"value\":\"libredtail-http\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded\"},{\"name\":\"Content-Length\",\"value\":\"241\"}],\"uri\":\"/\",\"args\":\"%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"POST\",\"requestId\":\"1-698a56a9-308b8be740b60a4705041408\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"requestBodySize\":241,\"requestBodySizeInspectedByWAF\":241,\"ja3Fingerprint\":\"7041540a5e44ce9a1d4200c4214355aa\",\"ja4Fingerprint\":\"t13i170900_5b57614c22b0_78e6aca7449b\"}",
+			"ingestionTime": 1770673848536,
+			"eventId": "39487345999330829165131480956100178329858017659888336896"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673834159,
+			"message": "{\"timestamp\":1770673834159,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\",\"value\":\"libredtail-http\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Content-Type\":\"text/plain\"},{\"name\":\"Content-Length\":\"33\"}],\"uri\":\"/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a56aa-08fd3364361029326fa99ed7\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"requestBodySize\":33,\"requestBodySizeInspectedByWAF\":33,\"ja3Fingerprint\":\"7041540a5e44ce9a1d4200c4214355aa\",\"ja4Fingerprint\":\"t13i170900_5b57614c22b0_78e6aca7449b\"}",
+			"ingestionTime": 1770673849627,
+			"eventId": "39487346005285128133139157336209417294196412390778667008"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673835988,
+			"message": "{\"timestamp\":1770673835988,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\",\"value\":\"libredtail-http\"},{\"name\":\"Connection\",\"value\":\"keep-alive\"},{\"name\":\"Content-Type\":\"text/plain\"},{\"name\":\"Content-Length\":\"33\"}],\"uri\":\"/vendor/phpunit/phpunit/Util/PHP/eval-stdin.php\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a56ab-0ce8d5df55a870a87392d746\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"requestBodySize\":33,\"requestBodySizeInspectedByWAF\":33,\"ja3Fingerprint\":\"83079f783073add89ddd44615cc19cc3\",\"ja4Fingerprint\":\"t13i171000_5b57614c22b0_ef7df7f74e48\"}",
+			"ingestionTime": 1770673847995,
+			"eventId": "39487346046073191101251667060105257815910585100744785920"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770673837777,
+			"message": "{\"timestamp\":1770673837777,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"160.187.165.218\",\"country\":\"ID\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"Upgrade-Insecure-Requests\",\"value\":\"1\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"User-Agent\":\"libredtail-http\"},{\"name\":\"Connection\":\"keep-alive\"},{\"name\":\"Content-Type\":\"text/plain\"},{\"name\":\"Content-Length\":\"33\"}],\"uri\":\"/vendor/phpunit/src/Util/PHP/eval-stdin.php\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a56ad-52c9d550421ad809648d61a2\",\"fragment\":\"\",\"scheme\":\"https\",\"host\":\"35.172.79.222\"},\"requestBodySize\":33,\"requestBodySizeInspectedByWAF\":33,\"ja3Fingerprint\":\"83079f783073add89ddd44615cc19cc3\",\"ja4Fingerprint\":\"t13i171000_5b57614c22b0_ef7df7f74e48\"}",
+			"ingestionTime": 1770673851858,
+			"eventId": "39487346085969224261422951864982669765728759306592911360"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770674348118,
+			"message": "{\"timestamp\":1770674348118,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"204.76.203.219\",\"country\":\"NL\",\"headers\":[{\"name\":\"User-Agent\",\"value\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip, deflate\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"Connection\":\"keep-alive\"},{\"name\":\"X-Requested-With\",\"value\":\"XMLHttpRequest\"},{\"name\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded; charset=UTF-8\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip, deflate\"},{\"name\":\"Accept-Language\",\"value\":\"en US,en;q=0.9,sv;q=0.8\"},{\"name\":\"Host\",\"value\":\"52.21.0.222\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a58ac-2b8e2c4151d1440a576791a6\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"52.21.0.222\"}}",
+			"ingestionTime": 1770674358431,
+			"eventId": "39487357466953829624739697151871502922699246410947231744"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770674495062,
+			"message": "{\"timestamp\":1770674495062,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"204.76.203.219\",\"country\":\"NL\",\"headers\":[{\"name\":\"User-Agent\",\"value\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip, deflate\"},{\"name\":\"Accept\",\"value\":\"*/*\"},{\"name\":\"Connection\":\"keep-alive\"},{\"name\":\"X-Requested-With\",\"value\":\"XMLHttpRequest\"},{\"name\":\"Content-Type\",\"value\":\"application/x-www-form-urlencoded; charset=UTF-8\"},{\"name\":\"Accept-Encoding\",\"value\":\"gzip, deflate\"},{\"name\":\"Accept-Language\",\"value\":\"en US,en;q=0.9,sv;q=0.8\"},{\"name\":\"Host\",\"value\":\"35.172.79.222\"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a593f-514d1abe62c2813b1c6453bf\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"35.172.79.222\"}}",
+			"ingestionTime": 1770674508617,
+			"eventId": "39487360743914532077623584243259973505001025619441287168"
+		},
+		{
+			"logStreamName": "us-east-1_chrisbarm-alb-waf01_0",
+			"timestamp": 1770675826883,
+			"message": "{\"timestamp\":1770675826883,\"formatVersion\":1,\"webaclId\":\"arn:aws:wafv2:us-east-1:198547498722:regional/webacl/chrisbarm-alb-waf01/7f15d7df-42e5-4015-a1ed-89f03b0fe16f\",\"terminatingRuleId\":\"Default_Action\",\"terminatingRuleType\":\"REGULAR\",\"action\":\"ALLOW\",\"terminatingRuleMatchDetails\":[],\"httpSourceName\":\"ALB\",\"httpSourceId\":\"198547498722-app/chrisbarm-alb01/fef774e135195182\",\"ruleGroupList\":[],\"rateBasedRuleList\":[],\"nonTerminatingMatchingRules\":[],\"requestHeadersInserted\":null,\"responseCodeSent\":null,\"httpRequest\":{\"clientIp\":\"47.251.126.144\",\"country\":\"US\",\"headers\":[{\"name\":\"Host\",\"value\":\"35.172.79.222\"},{\"name\":\"User-Agent\",\"value\":\"curl/7.64.1\"},{\"name\":\"Accept\",\"value\":\"*/*"}],\"uri\":\"/\",\"args\":\"\",\"httpVersion\":\"HTTP/1.1\",\"httpMethod\":\"GET\",\"requestId\":\"1-698a5e72-0a22b1ad7928a3ff16d7b20e\",\"fragment\":\"\",\"scheme\":\"http\",\"host\":\"35.172.79.222\"}}",
+			"ingestionTime": 1770675841609,
+			"eventId": "39487390444515303129876628837990456453713414773818195968"
+		}
+	],
+	"searchedLogStreams": []
+}
+```

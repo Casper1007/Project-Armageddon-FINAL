@@ -1,0 +1,208 @@
+## Bonus-D Verification Outputs
+
+### 1) Verify apex record exists
+Command:
+```bash
+aws route53 list-resource-record-sets \
+	--hosted-zone-id Z0145328288LS2ZVVX5DK \
+	--query "ResourceRecordSets[?Name=='chrisbdevsecops.com.']"
+```
+Output:
+```json
+[
+	{
+		"Name": "chrisbdevsecops.com.",
+		"Type": "A",
+		"AliasTarget": {
+			"HostedZoneId": "Z35SXDOTRQ7X7K",
+			"DNSName": "chrisbarm-alb01-723426148.us-east-1.elb.amazonaws.com.",
+			"EvaluateTargetHealth": true
+		}
+	},
+	{
+		"Name": "chrisbdevsecops.com.",
+		"Type": "NS",
+		"TTL": 172800,
+		"ResourceRecords": [
+			{
+				"Value": "ns-324.awsdns-40.com."
+			},
+			{
+				"Value": "ns-527.awsdns-01.net."
+			},
+			{
+				"Value": "ns-2015.awsdns-59.co.uk."
+			},
+			{
+				"Value": "ns-1209.awsdns-23.org."
+			}
+		]
+	},
+	{
+		"Name": "chrisbdevsecops.com.",
+		"Type": "SOA",
+		"TTL": 900,
+		"ResourceRecords": [
+			{
+				"Value": "ns-324.awsdns-40.com. awsdns-hostmaster.amazon.com. 17200 900 1209600 86400"
+			}
+		]
+	}
+]
+```
+
+### 2) Verify ALB logging is enabled
+Command:
+```bash
+aws elbv2 describe-load-balancers --region us-east-1 \
+	--names chrisbarm-alb01 \
+	--query "LoadBalancers[0].LoadBalancerArn"
+```
+Output:
+```text
+arn:aws:elasticloadbalancing:us-east-1:198547498722:loadbalancer/app/chrisbarm-alb01/fef774e135195182
+```
+
+Command:
+```bash
+aws elbv2 describe-load-balancer-attributes --region us-east-1 \
+	--load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:198547498722:loadbalancer/app/chrisbarm-alb01/fef774e135195182
+```
+Output:
+```json
+{
+	"Attributes": [
+		{
+			"Key": "access_logs.s3.enabled",
+			"Value": "true"
+		},
+		{
+			"Key": "access_logs.s3.bucket",
+			"Value": "chrisbarm-alb-logs-198547498722"
+		},
+		{
+			"Key": "access_logs.s3.prefix",
+			"Value": "alb-access-logs"
+		},
+		{
+			"Key": "health_check_logs.s3.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "health_check_logs.s3.bucket",
+			"Value": ""
+		},
+		{
+			"Key": "health_check_logs.s3.prefix",
+			"Value": ""
+		},
+		{
+			"Key": "idle_timeout.timeout_seconds",
+			"Value": "60"
+		},
+		{
+			"Key": "deletion_protection.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "routing.http2.enabled",
+			"Value": "true"
+		},
+		{
+			"Key": "routing.http.drop_invalid_header_fields.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "routing.http.xff_client_port.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "routing.http.preserve_host_header.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "routing.http.xff_header_processing.mode",
+			"Value": "append"
+		},
+		{
+			"Key": "load_balancing.cross_zone.enabled",
+			"Value": "true"
+		},
+		{
+			"Key": "routing.http.desync_mitigation_mode",
+			"Value": "defensive"
+		},
+		{
+			"Key": "client_keep_alive.seconds",
+			"Value": "3600"
+		},
+		{
+			"Key": "waf.fail_open.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "routing.http.x_amzn_tls_version_and_cipher_suite.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "zonal_shift.config.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "connection_logs.s3.enabled",
+			"Value": "false"
+		},
+		{
+			"Key": "connection_logs.s3.bucket",
+			"Value": ""
+		},
+		{
+			"Key": "connection_logs.s3.prefix",
+			"Value": ""
+		}
+	]
+}
+```
+
+### 3) Generate some traffic
+Command:
+```bash
+curl -I https://chrisbdevsecops.com
+```
+Output:
+```text
+HTTP/1.1 302 Found
+Content-Type: text/html
+Connection: keep-alive
+X-WS-RateLimit-Limit: 1000
+X-WS-RateLimit-Remaining: 999
+Date: Mon, 09 Feb 2026 22:23:26 GMT
+Server: Apache
+Cache-Control: no-cache
+Location: https://www.facebook.com/casperusf
+```
+
+Command:
+```bash
+curl -I https://app.chrisbdevsecops.com
+```
+Output:
+```text
+curl: (35) Recv failure: Connection was reset
+```
+
+### 4) Verify logs arrived in S3
+Command:
+```bash
+aws s3 ls s3://chrisbarm-alb-logs-198547498722/alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/ --recursive | head -n 20
+```
+Output:
+```text
+2026-02-09 15:30:04        596 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2130Z_52.21.0.222_3lg64jat.log.gz
+2026-02-09 15:35:04        848 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2135Z_35.172.79.222_2r788ujy.log.gz
+2026-02-09 15:45:05        424 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2145Z_35.172.79.222_am6c8rna.log.gz
+2026-02-09 15:50:05        491 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2150Z_35.172.79.222_3vrxf1uj.log.gz
+2026-02-09 15:55:05       1473 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2155Z_35.172.79.222_2bsgehwd.log.gz
+2026-02-09 16:00:05        353 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2200Z_52.21.0.222_3eim237e.log.gz
+2026-02-09 16:05:05        350 alb-access-logs/AWSLogs/198547498722/elasticloadbalancing/us-east-1/2026/02/09/198547498722_elasticloadbalancing_us-east-1_app.chrisbarm-alb01.fef774e135195182_20260209T2205Z_35.172.79.222_4ou7wh1k.log.gz
+```

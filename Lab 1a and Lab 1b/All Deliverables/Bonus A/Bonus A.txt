@@ -1,0 +1,88 @@
+## Design goals
+- EC2 is private (no public IP)
+- No SSH required (use SSM Session Manager)
+- Private subnets do not need NAT to talk to AWS control-plane services
+- Use VPC Interface Endpoints for SSM, EC2Messages, SSMMessages, CloudWatch Logs, Secrets Manager, and KMS
+- Use S3 Gateway Endpoint
+- Tighten IAM: GetSecretValue only for your secret, GetParameter(s) only for your path
+
+Note: If you remove NAT entirely, OS package installs can be tricky unless repos are reachable (often via S3). This skeleton gives you S3 endpoint and leaves NAT as optional student choice. In many orgs, teams use golden AMIs or image pipelines to avoid yum/apt internet needs in private subnets.
+
+## Student verification (CLI) for Bonus-A
+
+### 1) Prove EC2 is private (no public IP)
+Command:
+```bash
+aws ec2 describe-instances --region us-east-1 --instance-ids i-0817e583da85ee537 \
+	--query "Reservations[].Instances[].PublicIpAddress" --output json
+```
+Output:
+```json
+[]
+```
+
+### 2) Prove VPC endpoints exist
+Command:
+```bash
+aws ec2 describe-vpc-endpoints --region us-east-1 \
+	--filters "Name=vpc-id,Values=vpc-0da21ac234024f61a" \
+	--query "VpcEndpoints[].ServiceName" --output text
+```
+Output:
+```text
+com.amazonaws.us-east-1.s3
+com.amazonaws.us-east-1.logs
+com.amazonaws.us-east-1.kms
+com.amazonaws.us-east-1.ec2messages
+com.amazonaws.us-east-1.secretsmanager
+com.amazonaws.us-east-1.ssm
+com.amazonaws.us-east-1.ssmmessages
+```
+
+### 3) Prove Session Manager path works (no SSH)
+Command:
+```bash
+aws ssm describe-instance-information --region us-east-1 \
+	--query "InstanceInformationList[].InstanceId" --output text
+```
+Output:
+```text
+i-0817e583da85ee537 i-04fec5a6b697c4bc3
+```
+
+### 4) Prove the instance can read both config stores
+Command:
+```bash
+aws ssm get-parameter --region us-east-1 --name /lab/db/endpoint --query "Parameter.Value" --output text
+```
+Output:
+```text
+An error occurred (ParameterNotFound) when calling the GetParameter operation:
+```
+
+Command:
+```bash
+aws secretsmanager get-secret-value --region us-east-1 --secret-id lab1a/rds/mysql \
+	--query "SecretString" --output text
+```
+Output:
+```text
+{"dbname":"labdb","host":"chrisbarm-mysql.c4x68420cyvy.us-east-1.rds.amazonaws.com","password":"redpillman","port":3306,"username":"daman"}
+```
+
+### 5) Prove CloudWatch logs delivery path is available via endpoint
+Command:
+```bash
+MSYS_NO_PATHCONV=1 aws logs describe-log-streams --region us-east-1 \
+	--log-group-name /aws/ec2/chrisbarm-rds-app --query "logStreams[].logStreamName" --output text
+```
+Output:
+```text
+(no log streams returned)
+```
+
+## How this maps to real company practice
+- Private compute + SSM is standard in regulated orgs and mature cloud shops.
+- VPC endpoints reduce exposure and dependency on NAT for AWS APIs.
+- Least privilege is not optional in security interviews.
+- Terraform submission mirrors how teams ship changes: PR, plan, review, apply, monitor.

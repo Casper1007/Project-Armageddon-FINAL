@@ -1,0 +1,59 @@
+## Bonus-C Route53 outputs and verification
+
+### Outputs to include
+```hcl
+output "chrisbarm_route53_zone_id" {
+	value = local.chrisbarm_zone_id
+}
+
+output "chrisbarm_app_url_https" {
+	value = "https://${var.app_subdomain}.${var.domain_name}"
+}
+```
+
+### Verification commands (CLI)
+```bash
+aws route53 list-hosted-zones-by-name \
+	--dns-name chrisbdevsecops.com \
+	--query "HostedZones[].Id"
+
+aws route53 list-resource-record-sets \
+	--hosted-zone-id <ZONE_ID> \
+	--query "ResourceRecordSets[?Name=='app.chrisbdevsecops.com.']"
+
+aws acm describe-certificate \
+	--certificate-arn <CERT_ARN> \
+	--query "Certificate.Status"
+
+curl -I https://app.chrisbdevsecops.com
+```
+
+### Verification outputs
+```text
+/hostedzone/Z0975220SJ1BK9DTNT7A /hostedzone/Z0145328288LS2ZVVX5DK
+```
+
+```json
+[
+	{
+		"Name": "app.chrisbdevsecops.com.",
+		"Type": "A",
+		"AliasTarget": {
+			"HostedZoneId": "Z35SXDOTRQ7X7K",
+			"DNSName": "chrisbarm-alb01-723426148.us-east-1.elb.amazonaws.com.",
+			"EvaluateTargetHealth": true
+		}
+	}
+]
+```
+
+```text
+ISSUED
+```
+
+```text
+curl: (35) Recv failure: Connection was reset
+```
+
+
+chrisbdevsecops.com does not have a URL. I just own the domain.
