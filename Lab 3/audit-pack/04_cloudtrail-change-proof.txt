@@ -278,6 +278,6 @@ This audit trail enables:
 - Regulatory reporting
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Evidence Generated: 2026-02-02
+Evidence Generated: 2026-02-15
 Lab: 3B — Japan Medical APPI Compliance
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

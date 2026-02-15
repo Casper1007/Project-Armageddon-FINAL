@@ -1,5 +1,5 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-LAB 3B COMPLIANCE VERIFICATION — 6 Evidence Points ✅
+LAB 3B COMPLIANCE VERIFICATION — 6 Evidence Points (in progress)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Lab: Japan Medical — Audit Evidence & Regulator-Ready Logging
@@ -49,7 +49,7 @@ Proof Status: ✅ VERIFIED
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ EVIDENCE POINT 2: ACCESS TRAIL
+⚠ EVIDENCE POINT 2: ACCESS TRAIL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Requirement:
@@ -61,8 +61,8 @@ Evidence File: 02_edge-proof-cloudfront.txt
 
 CloudFront Logging Configuration:
 ----------------------------------
-Distribution ID: E25VKCDLJWL0Y9
-Logging: ENABLED ✅
+Distribution ID: (not created)
+Logging: PENDING
 S3 Bucket: chrisbarm-cloudfront-logs-198547498722
 S3 Prefix: saopaulo-cf/
 Format: Standard CloudFront logs
@@ -86,10 +86,9 @@ x-edge-result-type Values:
   Error       → Origin error (4xx/5xx)
   LimitExceeded → Rate limit triggered
 
-Proof Status: ✅ VERIFIED
-  - CloudFront access logging enabled
-  - Standard logs capture viewer requests
-  - x-edge-result-type available for cache analysis
+Proof Status: ⚠ PENDING
+  - CloudFront distribution not yet created
+  - Logging will be enabled on deployment
   - Logs stored in Tokyo S3 (data residency)
   - Personal information excluded (PII-safe)
 
@@ -161,7 +160,7 @@ Proof Status: ✅ VERIFIED
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ EVIDENCE POINT 4: NETWORK CORRIDOR PROOF
+⚠ EVIDENCE POINT 4: NETWORK CORRIDOR PROOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Requirement:
@@ -174,21 +173,21 @@ Evidence File: 05_network-corridor-proof.txt
 Transit Gateway Architecture:
 ------------------------------
 Tokyo (Shinjuku):
-  TGW ID: tgw-06e91c48e69f6fd21
+  TGW ID: tgw-0e67342ac14f11dcc
   Name: shinjuku-tgw01
   State: available ✅
   Role: Hub
 
 São Paulo (Liberdade):
-  TGW ID: tgw-0fc03b3b4fd951ecf
+  TGW ID: tgw-0497d6f12cf552d21
   Name: liberdade-tgw01
   State: available ✅
   Role: Spoke
 
 TGW Peering:
-  Attachment ID: tgw-attach-06603e5f905264592
-  State: available ✅
-  Connection: ACTIVE
+  Attachment ID: (not created)
+  State: not-created
+  Connection: PENDING
   Requester: Tokyo (ap-northeast-1)
   Accepter: São Paulo (sa-east-1)
 
@@ -196,10 +195,10 @@ Route Table Verification:
 --------------------------
 Tokyo Routes:
   10.0.0.0/16 → active (propagated) - Local VPC
-  10.1.0.0/16 → active (static) - São Paulo via TGW peering ✅
+  10.1.0.0/16 → pending (static) - São Paulo via TGW peering
 
 São Paulo Routes:
-  10.0.0.0/16 → active (static) - Tokyo via TGW peering ✅
+  10.0.0.0/16 → pending (static) - Tokyo via TGW peering
   10.1.0.0/16 → active (propagated) - Local VPC
 
 VPC Peering Check:
@@ -209,22 +208,22 @@ VPC Peering Check:
 VPC Flow Logs:
 --------------
 Tokyo:
-  Flow Log ID: fl-0cbbb934a26525add
-  VPC ID: vpc-0f892be9420d47eb5
+  Flow Log ID: fl-0f88a9bd10d111060
+  VPC ID: vpc-03ae1927139f96a36
   Destination: S3 (chrisbarm-flowlogs-198547498722)
   Traffic Type: ALL
   Purpose: Network corridor evidence (PHI-safe metadata)
 
 São Paulo:
-  Flow Log ID: fl-0d8328ebb6abbecf3
-  VPC ID: vpc-083a0c8ff941ae297
+  Flow Log ID: fl-09c3c10ba8ed0bd81
+  VPC ID: vpc-0fffd14d34d9447d9
   Destination: S3 (chrisbarm-flowlogs-198547498722)
   Traffic Type: ALL
   Purpose: Network corridor evidence (PHI-safe metadata)
 
-Proof Status: ✅ VERIFIED
-  - TGW peering established (not VPC peering)
-  - Bidirectional routes active
+Proof Status: ⚠ PENDING
+  - TGW peering not created yet
+  - Bidirectional routes pending
   - Explicit routing (no defaults)
   - VPC Flow Logs enabled (both regions)
   - Flow logs stored in Tokyo S3
@@ -232,7 +231,7 @@ Proof Status: ✅ VERIFIED
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ EVIDENCE POINT 5: EDGE SECURITY PROOF
+⚠ EVIDENCE POINT 5: EDGE SECURITY PROOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Requirement:
@@ -245,14 +244,14 @@ Evidence Files: 02_edge-proof-cloudfront.txt, 03_waf-proof.txt
 CloudFront + WAF Integration:
 ------------------------------
 CloudFront:
-  Distribution ID: E25VKCDLJWL0Y9
-  Status: Deployed ✅
-  WAF Attached: ✅ liberdade-waf-acl
+  Distribution ID: (not created)
+  Status: NOT DEPLOYED
+  WAF Attached: pending
   Origin Protection: Custom header (X-Origin-Verify)
 
 WAF Configuration:
   Web ACL: liberdade-waf-acl
-  ID: 48884250-b69b-4945-9da7-1e883033164f
+  ID: e4373b5b-cadf-4242-aaf7-d1906d6d1b54
   Scope: CLOUDFRONT (global)
   Region: us-east-1
 
@@ -294,9 +293,9 @@ Origin Protection (Direct ALB Blocked):
   ALB Listener Rule: REQUIRES custom header ✅
   Direct Access: BLOCKED (403 Forbidden) ✅
 
-Proof Status: ✅ VERIFIED
-  - CloudFront in front of ALB
-  - WAF associated with CloudFront
+Proof Status: ⚠ PENDING
+  - CloudFront not deployed yet
+  - WAF not associated with CloudFront yet
   - 3-layer security (Rate + OWASP + CVE)
   - WAF logging to CloudWatch Logs
   - Allow/Block events logged

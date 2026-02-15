@@ -107,6 +107,6 @@ connectivity, ensuring that application requests can be processed globally
 while data sovereignty is maintained in Japan.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Evidence Generated: 2026-02-02
+Evidence Generated: 2026-02-15
 Lab: 3B — Japan Medical APPI Compliance
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

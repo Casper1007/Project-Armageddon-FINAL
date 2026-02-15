@@ -1,0 +1,50 @@
+LAB 3B AUDIT RUN (LOCAL STATE REVIEW)
+Date: 2026-02-15
+Scope: Tokyo + Sao Paulo deployments (same AWS account)
+Source: Terraform state files (no live AWS CLI calls)
+
+Summary
+- Data residency: PASS (RDS only in Tokyo state)
+- Access trail (CloudFront logs): PENDING (CloudFront distribution not created)
+- Change trail (CloudTrail): PASS (Tokyo + Sao Paulo trails in state)
+- Network corridor (TGW peering): PENDING (peering attachment not created)
+- Edge security (WAF + CloudFront): PENDING (WAF exists, CloudFront pending)
+- Retention/immutability: PASS (S3 log buckets + versioning in Tokyo state)
+
+Evidence Details
+1) Data Residency Proof
+- Tokyo RDS endpoint: chrisbarm-rds01.cjyguam6c4nd.ap-northeast-1.rds.amazonaws.com
+- Sao Paulo RDS: none in state
+- Result: PASS
+
+2) Access Trail (CloudFront logs)
+- CloudFront distribution: not found in Sao Paulo state
+- CloudFront log bucket: chrisbarm-cloudfront-logs-198547498722 (Tokyo)
+- Result: PENDING (create/deploy CloudFront distribution)
+
+3) Change Trail (CloudTrail)
+- Tokyo trail ARN: arn:aws:cloudtrail:ap-northeast-1:198547498722:trail/chrisbarm-audit-trail-tokyo
+- Sao Paulo trail ARN: arn:aws:cloudtrail:sa-east-1:198547498722:trail/liberdade-audit-trail-saopaulo
+- Result: PASS
+
+4) Network Corridor (TGW)
+- Tokyo TGW: tgw-0e67342ac14f11dcc (ap-northeast-1)
+- Sao Paulo TGW: tgw-0497d6f12cf552d21 (sa-east-1)
+- TGW peering attachment: not created (pending)
+- Result: PENDING (create TGW peering attachment and routes)
+
+5) Edge Security (CloudFront + WAF)
+- WAF Web ACL ARN: arn:aws:wafv2:us-east-1:198547498722:global/webacl/liberdade-waf-acl/e4373b5b-cadf-4242-aaf7-d1906d6d1b54
+- WAF logging: aws-waf-logs-liberdade (CloudWatch Logs, us-east-1)
+- CloudFront distribution: not created
+- Result: PENDING
+
+6) Retention / Immutability
+- CloudTrail logs bucket: chrisbarm-cloudtrail-logs-198547498722 (Tokyo)
+- CloudFront logs bucket: chrisbarm-cloudfront-logs-198547498722 (Tokyo)
+- Flow logs bucket: chrisbarm-flowlogs-198547498722 (Tokyo)
+- Result: PASS
+
+Notes
+- This audit run does not overwrite any existing audit-pack files.
+- To convert PENDING items to PASS, deploy CloudFront and enable TGW peering, then re-run audit.

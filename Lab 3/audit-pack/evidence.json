@@ -3,7 +3,7 @@
     "lab_id": "Lab3B",
     "lab_name": "Japan Medical APPI Compliance",
     "student_submission": "Audit Evidence Pack",
-    "generated_timestamp": "2026-02-02T23:47:00Z",
+    "generated_timestamp": "2026-02-15T00:00:00Z",
     "aws_account_id": "198547498722",
     "compliance_framework": "APPI (Act on the Protection of Personal Information)"
   },
@@ -33,29 +33,29 @@
     "proof": "RDS exists ONLY in Tokyo (ap-northeast-1). No database replication to any other region."
   },
   "network_corridor_compliance": {
-    "status": "COMPLIANT",
+    "status": "PENDING",
     "tokyo_transit_gateway": {
-      "tgw_id": "tgw-06e91c48e69f6fd21",
+      "tgw_id": "tgw-0e67342ac14f11dcc",
       "name": "shinjuku-tgw01",
       "region": "ap-northeast-1",
       "state": "available",
       "role": "hub"
     },
     "sao_paulo_transit_gateway": {
-      "tgw_id": "tgw-0fc03b3b4fd951ecf",
+      "tgw_id": "tgw-0497d6f12cf552d21",
       "name": "liberdade-tgw01",
       "region": "sa-east-1",
       "state": "available",
       "role": "spoke"
     },
     "tgw_peering": {
-      "attachment_id": "tgw-attach-06603e5f905264592",
-      "state": "available",
-      "requester_tgw": "tgw-06e91c48e69f6fd21",
+      "attachment_id": null,
+      "state": "not-created",
+      "requester_tgw": "tgw-0e67342ac14f11dcc",
       "requester_region": "ap-northeast-1",
-      "accepter_tgw": "tgw-0fc03b3b4fd951ecf",
+      "accepter_tgw": "tgw-0497d6f12cf552d21",
       "accepter_region": "sa-east-1",
-      "connection_status": "ACTIVE"
+      "connection_status": "PENDING"
     },
     "tokyo_routes": [
       {
@@ -66,7 +66,7 @@
       },
       {
         "destination": "10.1.0.0/16",
-        "state": "active",
+        "state": "pending",
         "type": "static",
         "description": "Remote São Paulo VPC via TGW peering"
       }
@@ -74,7 +74,7 @@
     "sao_paulo_routes": [
       {
         "destination": "10.0.0.0/16",
-        "state": "active",
+        "state": "pending",
         "type": "static",
         "description": "Remote Tokyo VPC via TGW peering"
       },
@@ -86,22 +86,22 @@
       }
     ],
     "vpc_peering_connections": 0,
-    "proof": "Controlled corridor established via Transit Gateway peering. No VPC peering exists."
+    "proof": "Transit Gateway peering pending; no VPC peering exists."
   },
   "edge_security_compliance": {
-    "status": "COMPLIANT",
+    "status": "PENDING",
     "cloudfront": {
-      "distribution_id": "E25VKCDLJWL0Y9",
-      "domain_name": "d1lnazblye9u8p.cloudfront.net",
-      "status": "Deployed",
-      "waf_attached": true,
-      "logging_enabled": true,
+      "distribution_id": null,
+      "domain_name": null,
+      "status": "NOT_DEPLOYED",
+      "waf_attached": false,
+      "logging_enabled": false,
       "log_bucket": "chrisbarm-cloudfront-logs-198547498722",
       "log_prefix": "saopaulo-cf/"
     },
     "waf": {
       "web_acl_name": "liberdade-waf-acl",
-      "web_acl_id": "48884250-b69b-4945-9da7-1e883033164f",
+      "web_acl_id": "e4373b5b-cadf-4242-aaf7-d1906d6d1b54",
       "scope": "CLOUDFRONT",
       "region": "us-east-1",
       "rules": [
@@ -139,7 +139,7 @@
       "alb_requires_header": true,
       "direct_alb_access": "BLOCKED"
     },
-    "proof": "CloudFront with WAF provides edge security. Origin protection via custom headers prevents direct ALB access."
+    "proof": "WAF exists; CloudFront distribution pending. Origin protection via custom headers configured."
   },
   "audit_logging_compliance": {
     "status": "COMPLIANT",
@@ -178,14 +178,14 @@
     },
     "vpc_flow_logs": {
       "tokyo": {
-        "flow_log_id": "fl-0cbbb934a26525add",
-        "vpc_id": "vpc-0f892be9420d47eb5",
+        "flow_log_id": "fl-0f88a9bd10d111060",
+        "vpc_id": "vpc-03ae1927139f96a36",
         "destination": "chrisbarm-flowlogs-198547498722",
         "traffic_type": "ALL"
       },
       "sao_paulo": {
-        "flow_log_id": "fl-0d8328ebb6abbecf3",
-        "vpc_id": "vpc-083a0c8ff941ae297",
+        "flow_log_id": "fl-09c3c10ba8ed0bd81",
+        "vpc_id": "vpc-0fffd14d34d9447d9",
         "destination": "chrisbarm-flowlogs-198547498722",
         "traffic_type": "ALL"
       }
@@ -194,9 +194,9 @@
   },
   "compliance_summary": {
     "total_checks": 5,
-    "passed_checks": 5,
+    "passed_checks": 3,
     "failed_checks": 0,
-    "compliance_percentage": 100,
+    "compliance_percentage": 60,
     "findings": [
       {
         "category": "Data Residency",
@@ -205,13 +205,13 @@
       },
       {
         "category": "Network Corridor",
-        "status": "PASS",
-        "evidence": "Transit Gateway peering with explicit routes, no VPC peering"
+        "status": "PENDING",
+        "evidence": "Transit Gateway peering not created yet; routes pending"
       },
       {
         "category": "Edge Security",
-        "status": "PASS",
-        "evidence": "CloudFront + WAF with rate limiting and managed rules"
+        "status": "PENDING",
+        "evidence": "WAF exists; CloudFront distribution not deployed yet"
       },
       {
         "category": "Audit Trail",
@@ -224,8 +224,8 @@
         "evidence": "All logs stored in Tokyo S3 buckets with versioning"
       }
     ],
-    "overall_compliance": "COMPLIANT",
-    "appi_requirements_met": true
+    "overall_compliance": "IN_PROGRESS",
+    "appi_requirements_met": false
   },
   "evidence_files": [
     "00_architecture-summary.md",
@@ -237,7 +237,7 @@
     "evidence.json"
   ],
   "auditor_contact": {
-    "submission_date": "2026-02-02",
+    "submission_date": "2026-02-15",
     "lab_number": "3B",
     "project_name": "Armageddon",
     "architecture_principle": "Compute Travels, Data Stays"

@@ -49,7 +49,7 @@ This folder contains comprehensive audit evidence demonstrating APPI (Act on the
    - Machine-readable compliance summary
    - All verification results
    - Resource IDs and configurations
-   - 100% compliance score
+   - Compliance score (in progress)
 
 8. **AUDITOR_NARRATIVE.txt** (Deliverable B)
    - 12-line auditor narrative
@@ -83,12 +83,12 @@ aws cloudtrail lookup-events --region ap-northeast-1 --max-results 10
 | Requirement | Status | Evidence File |
 |-------------|--------|---------------|
 | Data Residency | ✅ PASS | 01_data-residency-proof.txt |
-| Network Corridor | ✅ PASS | 05_network-corridor-proof.txt |
-| Edge Security | ✅ PASS | 02_edge-proof-cloudfront.txt, 03_waf-proof.txt |
+| Network Corridor | ⚠ PENDING | 05_network-corridor-proof.txt |
+| Edge Security | ⚠ PENDING | 02_edge-proof-cloudfront.txt, 03_waf-proof.txt |
 | Change Trail | ✅ PASS | 04_cloudtrail-change-proof.txt |
 | Log Centralization | ✅ PASS | All proof files |
 
-**Overall Compliance: 100%**
+**Overall Compliance: IN PROGRESS**
 
 ## Key Findings
 
@@ -99,13 +99,13 @@ aws cloudtrail lookup-events --region ap-northeast-1 --max-results 10
 - No cross-region database replication
 
 ### Controlled Connectivity ✓
-- Transit Gateway peering (not VPC peering)
+- Transit Gateway peering (not VPC peering) (pending)
 - Explicit routing in both regions
 - No default routes or internet gateways in private subnets
-- TGW peering state: available
+- TGW peering state: pending
 
 ### Edge Protection ✓
-- CloudFront distribution active and deployed
+- CloudFront distribution pending deployment
 - WAF with 3 rules (rate limiting + 2 managed rule sets)
 - Origin protection via custom headers
 - Direct ALB access blocked
@@ -138,7 +138,7 @@ All evidence files are in plain text format for easy inspection. The evidence.js
 
 - **Lab**: 3B — Japan Medical APPI Compliance
 - **Project**: Armageddon
-- **Submission Date**: 2026-02-02
+- **Submission Date**: 2026-02-15
 - **AWS Account**: 198547498722
 - **Regions**: ap-northeast-1 (Tokyo), sa-east-1 (São Paulo)
 
@@ -148,6 +148,6 @@ For questions about this evidence pack, refer to the detailed proof files or rev
 
 ---
 
-**Compliance Status: VERIFIED ✓**  
-**Evidence Generated**: 2026-02-02  
+**Compliance Status: IN PROGRESS**  
+**Evidence Generated**: 2026-02-15  
 **Lab**: 3B — Japan Medical APPI Compliance

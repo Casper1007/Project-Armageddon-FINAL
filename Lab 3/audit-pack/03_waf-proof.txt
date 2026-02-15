@@ -18,15 +18,15 @@ aws wafv2 list-web-acls --scope CLOUDFRONT --region us-east-1 \
 Result:
 -------
 Name:  liberdade-waf-acl
-ID:    48884250-b69b-4945-9da7-1e883033164f
-ARN:   arn:aws:wafv2:us-east-1:198547498722:global/webacl/liberdade-waf-acl/48884250-b69b-4945-9da7-1e883033164f
+ID:    e4373b5b-cadf-4242-aaf7-d1906d6d1b54
+ARN:   arn:aws:wafv2:us-east-1:198547498722:global/webacl/liberdade-waf-acl/e4373b5b-cadf-4242-aaf7-d1906d6d1b54
 
 Scope: CLOUDFRONT (Global)
 Region: us-east-1 (CloudFront WAF requirement)
 
 ✅ VERIFIED: WAF Web ACL exists
 ✅ VERIFIED: Configured for CloudFront scope
-✅ VERIFIED: Associated with distribution E25VKCDLJWL0Y9
+⚠ VERIFIED: CloudFront association pending
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -246,6 +246,6 @@ This configuration satisfies security compliance requirements for protecting
 Personal Health Information (PHI) access infrastructure.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Evidence Generated: 2026-02-02
+Evidence Generated: 2026-02-15
 Lab: 3B — Japan Medical APPI Compliance
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

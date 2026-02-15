@@ -39,7 +39,7 @@ Global healthcare platform serving patients worldwide while maintaining strict A
 
 ### Global (Edge) — CloudFront + WAF
 **Resources:**
-- CloudFront Distribution (d1lnazblye9u8p.cloudfront.net)
+- CloudFront Distribution (pending deployment)
 - WAF Web ACL (liberdade-waf-acl)
 - Rate limiting (2000 req/5min per IP)
 - AWS Managed Rules (Core + Known Bad Inputs)
@@ -64,7 +64,7 @@ Global healthcare platform serving patients worldwide while maintaining strict A
 └────────────────────────────────┼──────────────────────┘
                                  │ TGW Peering
                                  │ (Cross-Region)
-                                 │ Status: available
+                                 │ Status: pending
 ┌────────────────────────────────▼──────────────────────┐
 │ São Paulo (sa-east-1)          │                      │
 │                         ┌──────┴───────┐              │
@@ -98,11 +98,11 @@ Global healthcare platform serving patients worldwide while maintaining strict A
 ### Routing Rules
 **Tokyo TGW Route Table:**
 - 10.0.0.0/16 → local VPC (propagated)
-- 10.1.0.0/16 → São Paulo via TGW peering (static)
+- 10.1.0.0/16 → São Paulo via TGW peering (static, pending)
 
 **São Paulo TGW Route Table:**
 - 10.1.0.0/16 → local VPC (propagated)
-- 10.0.0.0/16 → Tokyo via TGW peering (static)
+- 10.0.0.0/16 → Tokyo via TGW peering (static, pending)
 
 ### Why TGW Instead of VPC Peering?
 - Centralized routing control
@@ -160,7 +160,7 @@ aws cloudtrail lookup-events --region ap-northeast-1 \
 ### 4. Edge Security Proof
 **Command:**
 ```bash
-aws cloudfront get-distribution --id E25VKCDLJWL0Y9 | jq '.Distribution.DistributionConfig.WebACLId'
+aws cloudfront get-distribution --id <cloudfront-distribution-id> | jq '.Distribution.DistributionConfig.WebACLId'
 ```
 
 ### 5. Log Retention Proof
@@ -185,12 +185,12 @@ aws cloudfront get-distribution --id E25VKCDLJWL0Y9 | jq '.Distribution.Distribu
 - **Regions Deployed**: 2 (Tokyo, São Paulo)
 - **PHI Storage Regions**: 1 (Tokyo only)
 - **Transit Gateways**: 2 (1 per region)
-- **TGW Peering Attachments**: 1 (available)
+- **TGW Peering Attachments**: 0 (pending)
 - **RDS Instances**: 1 (Tokyo)
-- **CloudFront Distributions**: 1 (global)
+- **CloudFront Distributions**: 0 (pending)
 - **WAF Rules**: 3 (Rate Limit + 2 Managed Rule Sets)
 
 ---
-**Generated**: 2026-02-02  
+**Generated**: 2026-02-15  
 **Lab**: 3B — Japan Medical APPI Compliance  
 **Student**: Lab Evidence Submission

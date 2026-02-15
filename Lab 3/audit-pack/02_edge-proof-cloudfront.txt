@@ -17,14 +17,14 @@ aws cloudfront list-distributions \
 
 Result:
 -------
-Distribution ID:    E25VKCDLJWL0Y9
-Domain Name:        d1lnazblye9u8p.cloudfront.net
-Status:             Deployed
-WAF Web ACL:        arn:aws:wafv2:us-east-1:198547498722:global/webacl/liberdade-waf-acl/48884250-b69b-4945-9da7-1e883033164f
+Distribution ID:    (not created)
+Domain Name:        (pending)
+Status:             NOT DEPLOYED
+WAF Web ACL:        arn:aws:wafv2:us-east-1:198547498722:global/webacl/liberdade-waf-acl/e4373b5b-cadf-4242-aaf7-d1906d6d1b54
 
-✅ VERIFIED: CloudFront distribution is active
-✅ VERIFIED: WAF is associated with distribution
-✅ Edge acceleration enabled globally
+⚠ VERIFIED: CloudFront distribution not yet created
+⚠ VERIFIED: WAF exists but is not attached to CloudFront yet
+⚠ Edge acceleration pending deployment
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -53,7 +53,7 @@ PROOF 3: CloudFront Logging Configuration
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Logging Details:
-- Logging: Enabled
+- Logging: Configured (pending deployment)
 - S3 Bucket: chrisbarm-cloudfront-logs-198547498722.s3.amazonaws.com
 - Prefix: saopaulo-cf/
 - Format: Standard CloudFront logs
@@ -68,9 +68,9 @@ Log Fields Include:
 - User-Agent
 - Referer
 
-✅ VERIFIED: Access logging enabled
+⚠ PENDING: Access logging enabled after deployment
 ✅ VERIFIED: Logs stored in Tokyo S3
-✅ VERIFIED: Standard format for analysis
+⚠ PENDING: Standard format available after deployment
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -98,8 +98,8 @@ Benefits:
 - Bandwidth optimization
 - Global availability
 
-✅ VERIFIED: Caching reduces origin traffic
-✅ VERIFIED: Edge locations serve cached content
+⚠ PENDING: Caching reduces origin traffic after deployment
+⚠ PENDING: Edge locations serve cached content after deployment
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -119,8 +119,8 @@ User Experience:
 - TLS termination at edge
 - DDoS protection (AWS Shield Standard)
 
-✅ VERIFIED: Global edge network
-✅ VERIFIED: Low-latency access worldwide
+⚠ PENDING: Global edge network after deployment
+⚠ PENDING: Low-latency access worldwide after deployment
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -129,7 +129,7 @@ PROOF 6: Sample Access Verification
 
 Test Command:
 -------------
-curl -I https://d1lnazblye9u8p.cloudfront.net/
+curl -I https://<cloudfront-domain>/
 
 Expected Response Headers:
 --------------------------
@@ -140,35 +140,36 @@ x-cache: Hit from cloudfront | Miss from cloudfront
 x-amz-cf-pop: [EDGE-LOCATION-CODE]
 x-amz-cf-id: [REQUEST-ID]
 
-✅ CloudFront serving requests
-✅ Cache headers visible
-✅ Edge location identified
+⚠ CloudFront not yet serving requests
+⚠ Cache headers not available until distribution deploys
+⚠ Edge location not available until distribution deploys
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 COMPLIANCE SUMMARY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[✓] CloudFront distribution active and deployed
-[✓] WAF Web ACL attached to distribution
+[ ] CloudFront distribution active and deployed
+[ ] WAF Web ACL attached to distribution
 [✓] Origin protection via custom headers
 [✓] Direct ALB access blocked
-[✓] Standard logging enabled (S3 in Tokyo)
-[✓] Global edge network for low latency
-[✓] Cache optimization reduces origin load
-[✓] TLS/HTTPS enforced
+[ ] Standard logging enabled (S3 in Tokyo)
+[ ] Global edge network for low latency
+[ ] Cache optimization reduces origin load
+[ ] TLS/HTTPS enforced
 
 CONCLUSION:
 -----------
-CloudFront provides secure, global edge acceleration while protecting the 
-origin infrastructure in São Paulo. The custom header mechanism ensures that 
-only CloudFront-routed requests reach the ALB, preventing direct internet 
-exposure. All access logs are centralized in Tokyo for compliance auditing.
+CloudFront will provide secure, global edge acceleration once deployed, while 
+protecting the origin infrastructure in São Paulo. The custom header mechanism 
+ensures that only CloudFront-routed requests reach the ALB, preventing direct 
+internet exposure. All access logs are centralized in Tokyo for compliance 
+auditing.
 
 The edge network enables global healthcare access with low latency while 
 maintaining data sovereignty (PHI remains in Tokyo) and security at the edge.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Evidence Generated: 2026-02-02
+Evidence Generated: 2026-02-15
 Lab: 3B — Japan Medical APPI Compliance
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
