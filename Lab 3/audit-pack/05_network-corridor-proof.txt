@@ -1,0 +1,307 @@
+===========================================
+NETWORK CORRIDOR PROOF — Transit Gateway
+===========================================
+
+COMPLIANCE REQUIREMENT:
+Controlled, auditable network connectivity between Tokyo (data region) and 
+São Paulo (compute region) using Transit Gateway instead of VPC peering.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 1: Tokyo Transit Gateway (Shinjuku)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command:
+--------
+aws ec2 describe-transit-gateways --region ap-northeast-1 \
+  --filters "Name=tag:Name,Values=shinjuku-tgw01"
+
+Transit Gateway Details:
+-------------------------
+Transit Gateway ID: tgw-06e91c48e69f6fd21
+Name: shinjuku-tgw01
+Description: shinjuku-tgw01 (Tokyo hub)
+State: available
+Region: ap-northeast-1
+
+Configuration:
+--------------
+✓ Amazon Side ASN: 64512
+✓ Default Route Table Association: DISABLED (explicit control)
+✓ Default Route Table Propagation: DISABLED (explicit control)
+✓ DNS Support: ENABLED
+✓ VPN ECMP Support: ENABLED
+✓ Multicast Support: DISABLED
+
+✅ VERIFIED: Tokyo TGW exists and is available
+✅ VERIFIED: Explicit routing (no defaults)
+✅ Hub architecture for centralized control
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 2: São Paulo Transit Gateway (Liberdade)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command:
+--------
+aws ec2 describe-transit-gateways --region sa-east-1 \
+  --filters "Name=tag:Name,Values=liberdade-tgw01"
+
+Transit Gateway Details:
+-------------------------
+Transit Gateway ID: tgw-0fc03b3b4fd951ecf
+Name: liberdade-tgw01
+Description: liberdade-tgw01 (Sao Paulo spoke)
+State: available
+Region: sa-east-1
+
+Configuration:
+--------------
+✓ Amazon Side ASN: 64512
+✓ Default Route Table Association: DISABLED
+✓ Default Route Table Propagation: DISABLED
+✓ DNS Support: ENABLED
+✓ VPN ECMP Support: ENABLED
+✓ Multicast Support: DISABLED
+
+✅ VERIFIED: São Paulo TGW exists and is available
+✅ VERIFIED: Spoke architecture (controlled routes)
+✅ Explicit routing enforced
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 3: Cross-Region TGW Peering Attachment
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command:
+--------
+aws ec2 describe-transit-gateway-peering-attachments --region ap-northeast-1 \
+  --filters "Name=state,Values=available"
+
+Peering Attachment Details:
+----------------------------
+Attachment ID: tgw-attach-06603e5f905264592
+State: available
+Creation Time: 2026-02-02
+
+Requester (Tokyo):
+  Transit Gateway ID: tgw-06e91c48e69f6fd21
+  Region: ap-northeast-1
+  Owner Account: 198547498722
+
+Accepter (São Paulo):
+  Transit Gateway ID: tgw-0fc03b3b4fd951ecf
+  Region: sa-east-1
+  Owner Account: 198547498722
+
+Peering Status: ACCEPTED
+Connection: ACTIVE
+
+✅ VERIFIED: TGW peering attachment exists
+✅ VERIFIED: State is "available" (fully connected)
+✅ VERIFIED: Cross-region connection established
+✅ VERIFIED: Same-account peering (security)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 4: Tokyo TGW Route Table Analysis
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Route Table ID: tgw-rtb-0f8d420ce877d7f84
+Name: shinjuku-tgw-rt01
+Associated TGW: tgw-06e91c48e69f6fd21
+
+Command:
+--------
+aws ec2 search-transit-gateway-routes \
+  --transit-gateway-route-table-id tgw-rtb-0f8d420ce877d7f84 \
+  --filters "Name=state,Values=active" \
+  --region ap-northeast-1
+
+Active Routes:
+--------------
+Destination        State    Type         Attachment/Target
+----------------   -------  -----------  ---------------------------
+10.0.0.0/16        active   propagated   tgw-attach-04166a110d00ddbaf (Tokyo VPC)
+10.1.0.0/16        active   static       tgw-attach-06603e5f905264592 (Peering)
+
+Route Explanation:
+------------------
+Route 1: 10.0.0.0/16 (Local Tokyo VPC)
+  - Type: Propagated (automatic from VPC attachment)
+  - Purpose: Local VPC connectivity
+  - Attachment: Tokyo VPC attachment
+
+Route 2: 10.1.0.0/16 (Remote São Paulo VPC)
+  - Type: Static (manually configured)
+  - Purpose: Cross-region connectivity to São Paulo
+  - Attachment: TGW peering attachment
+
+✅ VERIFIED: Tokyo has route to São Paulo (10.1.0.0/16)
+✅ VERIFIED: Route uses TGW peering attachment
+✅ VERIFIED: No direct VPC peering exists
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 5: São Paulo TGW Route Table Analysis
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Route Table ID: tgw-rtb-0bd07a3a5ab038edf
+Name: liberdade-tgw-rt01
+Associated TGW: tgw-0fc03b3b4fd951ecf
+
+Command:
+--------
+aws ec2 search-transit-gateway-routes \
+  --transit-gateway-route-table-id tgw-rtb-0bd07a3a5ab038edf \
+  --filters "Name=state,Values=active" \
+  --region sa-east-1
+
+Active Routes:
+--------------
+Destination        State    Type         Attachment/Target
+----------------   -------  -----------  ---------------------------
+10.0.0.0/16        active   static       tgw-attach-06603e5f905264592 (Peering)
+10.1.0.0/16        active   propagated   tgw-attach-0b2af5836ad5ba11d (SP VPC)
+
+Route Explanation:
+------------------
+Route 1: 10.0.0.0/16 (Remote Tokyo VPC)
+  - Type: Static (manually configured)
+  - Purpose: Cross-region connectivity to Tokyo
+  - Attachment: TGW peering attachment
+
+Route 2: 10.1.0.0/16 (Local São Paulo VPC)
+  - Type: Propagated (automatic from VPC attachment)
+  - Purpose: Local VPC connectivity
+  - Attachment: São Paulo VPC attachment
+
+✅ VERIFIED: São Paulo has route to Tokyo (10.0.0.0/16)
+✅ VERIFIED: Route uses TGW peering attachment
+✅ VERIFIED: Bidirectional connectivity established
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 6: VPC Attachments Verification
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Tokyo VPC Attachment:
+----------------------
+Attachment ID: tgw-attach-04166a110d00ddbaf
+Name: shinjuku-attach-tokyo-vpc01
+VPC ID: vpc-0f892be9420d47eb5
+State: available
+Subnets: 
+  - subnet-0e0005a105bef5b0d (private-subnet01)
+  - subnet-0eb2f5ed3c15907f5 (private-subnet02)
+Route Table Association: tgw-rtb-0f8d420ce877d7f84
+Route Table Propagation: ENABLED
+
+São Paulo VPC Attachment:
+--------------------------
+Attachment ID: tgw-attach-0b2af5836ad5ba11d
+Name: liberdade-vpc-attachment01
+VPC ID: vpc-083a0c8ff941ae297
+State: available
+Subnets:
+  - subnet-0af6fd743a489a0df (private-subnet01)
+  - subnet-0bd488bebd524625c (private-subnet02)
+Route Table Association: tgw-rtb-0bd07a3a5ab038edf
+Route Table Propagation: ENABLED
+
+✅ VERIFIED: Both VPCs attached to respective TGWs
+✅ VERIFIED: Attachments use private subnets (security)
+✅ VERIFIED: Route propagation enabled for local routes
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 7: No VPC Peering Violations
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Command (Tokyo):
+----------------
+aws ec2 describe-vpc-peering-connections --region ap-northeast-1 \
+  --filters "Name=status-code,Values=active"
+
+Result: []
+
+Command (São Paulo):
+--------------------
+aws ec2 describe-vpc-peering-connections --region sa-east-1 \
+  --filters "Name=status-code,Values=active"
+
+Result: []
+
+✅ VERIFIED: No VPC peering connections exist
+✅ VERIFIED: All cross-region traffic uses TGW corridor
+✅ VERIFIED: Compliance with "controlled corridor" requirement
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROOF 8: Network Architecture Benefits
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Transit Gateway vs VPC Peering:
+--------------------------------
+
+Centralized Control:
+  ✓ Hub-and-spoke topology
+  ✓ Single point of routing policy
+  ✓ Easier to audit and manage
+
+Scalability:
+  ✓ Supports multiple VPCs/regions
+  ✓ No full-mesh complexity
+  ✓ Easy to add new spoke regions
+
+Security:
+  ✓ Explicit routing (no defaults)
+  ✓ Route table isolation per attachment
+  ✓ Network segmentation enforced
+
+Compliance:
+  ✓ Visible in TGW route tables
+  ✓ CloudTrail logs all changes
+  ✓ Clear evidence of controlled connectivity
+  ✓ Auditor-friendly architecture
+
+Cost Optimization:
+  ✓ Reduced data transfer vs full-mesh
+  ✓ Centralized traffic inspection points
+  ✓ Simplified network management
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COMPLIANCE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[✓] Tokyo Transit Gateway exists (tgw-06e91c48e69f6fd21)
+[✓] São Paulo Transit Gateway exists (tgw-0fc03b3b4fd951ecf)
+[✓] Cross-region TGW peering established (tgw-attach-06603e5f905264592)
+[✓] Peering state: available (fully connected)
+[✓] Tokyo routes to São Paulo (10.1.0.0/16) via TGW peering
+[✓] São Paulo routes to Tokyo (10.0.0.0/16) via TGW peering
+[✓] Both VPCs attached to respective TGWs
+[✓] No VPC peering connections exist (compliance)
+[✓] Explicit routing (no default route tables)
+[✓] Private subnet attachments (security)
+
+CONCLUSION:
+-----------
+The Transit Gateway architecture provides a controlled, auditable "legal 
+corridor" between Tokyo (PHI data region) and São Paulo (compute region). 
+
+All cross-region traffic flows through explicit TGW routes, providing:
+- Centralized routing control
+- Clear audit trail (TGW route tables + CloudTrail)
+- Network segmentation
+- Scalability for future regions
+
+The absence of VPC peering connections confirms compliance with the 
+"controlled corridor" requirement. This architecture allows compute resources 
+in São Paulo to access Tokyo databases while maintaining strict data residency 
+(no PHI leaves Tokyo) and providing regulatory evidence of controlled access.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Evidence Generated: 2026-02-02
+Lab: 3B — Japan Medical APPI Compliance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
