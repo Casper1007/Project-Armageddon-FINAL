@@ -14,7 +14,7 @@ variable "project_name" {
 variable "vpc_cidr" {
   description = "VPC CIDR (use 10.0.0.0/16 as instructed)."
   type        = string
-  default     = "10.0.0.0/16" # student supplies
+  default     = "10.0.0.0/16" # TODO: student supplies
   validation {
     condition     = can(regex("^10\\.\\d{1,3}\\.\\d{1,3}\\.0/\\d{1,2}$", var.vpc_cidr))
     error_message = "VPC CIDR must be a valid 10.x.x.0/xx CIDR block."
@@ -25,7 +25,7 @@ variable "vpc_cidr" {
 variable "public_subnet_cidrs" {
   description = "Public subnet CIDRs (use 10.0.0.0/16)."
   type        = list(string)
-  default     = ["10.0.1.0/24", "10.0.2.0/24"] # student supplies
+  default     = ["10.0.1.0/24", "10.0.2.0/24"] # TODO: student supplies
   validation {
     condition     = alltrue([for cidr in var.public_subnet_cidrs : can(regex("^10\\.\\d{1,3}\\.\\d{1,3}\\.0/\\d{1,2}$", cidr))])
     error_message = "Each public subnet CIDR must be a valid 10.x.x.0/xx CIDR block."
@@ -36,7 +36,7 @@ variable "public_subnet_cidrs" {
 variable "private_subnet_cidrs" {
   description = "Private subnet CIDRs (use 10.0.0.0/16)."
   type        = list(string)
-  default     = ["10.0.101.0/24", "10.0.102.0/24"] # student supplies
+  default     = ["10.0.101.0/24", "10.0.102.0/24"] # TODO: student supplies
   validation {
     condition     = alltrue([for cidr in var.private_subnet_cidrs : can(regex("^10\\.\\d{1,3}\\.\\d{1,3}\\.0/\\d{1,2}$", cidr))])
     error_message = "Each private subnet CIDR must be a valid 10.x.x.0/xx CIDR block."
@@ -94,20 +94,20 @@ variable "db_name" {
 variable "db_username" {
   description = "DB master username (students should use Secrets Manager in 1B/1C)."
   type        = string
-  default     = "admin" # student supplies
+  default     = "admin" # TODO: student supplies
 }
 
 variable "db_password" {
   description = "DB master password (DO NOT hardcode in real life; for lab only)."
   type        = string
   sensitive   = true
-  default     = "REPLACE_ME" # student supplies
+  default     = "REPLACE_ME" # TODO: student supplies
 }
 
 variable "sns_email_endpoint" {
   description = "Email for SNS subscription (PagerDuty simulation)."
   type        = string
-  default     = "student@example.com" # student supplies
+  default     = "student@example.com" # TODO: student supplies
 }
 
 variable "route53_zone_id" {
@@ -117,7 +117,7 @@ variable "route53_zone_id" {
 }
 
 variable "domain_name" {
-  description = "Apex domain name for CloudFront (e.g., chrisbdevsecops.com)."
+  description = "Apex domain name for CloudFront (e.g., chewbacca-growl.com)."
   type        = string
   default     = "chrisbdevsecops.com"
 }
@@ -144,4 +144,17 @@ variable "saopaulo_tgw_id" {
   type        = string
   default     = null
   nullable    = true
+}
+
+variable "saopaulo_account_id" {
+  description = "Sao Paulo AWS account ID for TGW peering (required for cross-account)."
+  type        = string
+  default     = null
+  nullable    = true
+}
+
+variable "enable_saopaulo_tgw_peering" {
+  description = "Enable Tokyo->Sao Paulo TGW peering creation."
+  type        = bool
+  default     = false
 }
