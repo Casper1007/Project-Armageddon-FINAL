@@ -1,0 +1,31 @@
+LEFT:  C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b
+RIGHT: C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B
+
+checked=33
+matching=16
+different=16
+missing_left=0
+missing_right=1
+
+DIFFERENT
+audit_logging.tf != Terraform/audit_logging.tf (size)
+aws_security_group.chrisbarm_rds_sg01.tf != Terraform/aws_security_group.chrisbarm_rds_sg01.tf (size)
+main.tf != Terraform/main.tf (size)
+outputs.tf != Terraform/outputs.tf (size)
+tokyo_routes.tf != Terraform/tokyo_routes.tf (size)
+tokyo_tgw.tf != Terraform/tokyo_tgw.tf (size)
+variables.tf != Terraform/variables.tf (size)
+versions.tf != Terraform/versions.tf (size)
+saopaulo/data.tf != Sao Paulo/data.tf (size)
+saopaulo/main.tf != Sao Paulo/main.tf (size)
+saopaulo/outputs.tf != Sao Paulo/outputs.tf (size)
+saopaulo/providers.tf != Sao Paulo/providers.tf (size)
+saopaulo/sao_paulo_tgw.tf != Sao Paulo/sao_paulo_tgw.tf (size)
+saopaulo/terraform.tfvars != Sao Paulo/terraform.tfvars (size)
+saopaulo/variables.tf != Sao Paulo/variables.tf (size)
+malgus_network_corridor_proof.py != Python/malgus_network_corridor_proof.py (size)
+
+MISSING LEFT
+
+MISSING RIGHT
+missing Terraform/terraform.tfvars (left terraform.tfvars)

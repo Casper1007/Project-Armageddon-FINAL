@@ -1,0 +1,244 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LAB 3B — DELIVERABLES SUBMISSION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Lab Name: Japan Medical — APPI Compliance Audit Evidence
+Submission Date: 2026-02-02
+Student: Lab Evidence Package
+AWS Account: 198547498722
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ DELIVERABLE A — AUDIT EVIDENCE PACK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Location: audit-pack/
+
+Required Files:
+[✓] 00_architecture-summary.md          (196 lines, 9.0K)
+[✓] 01_data-residency-proof.txt         (112 lines, 4.7K)
+[✓] 02_edge-proof-cloudfront.txt        (174 lines, 6.6K)
+[✓] 03_waf-proof.txt                    (251 lines, 8.6K)
+[✓] 04_cloudtrail-change-proof.txt      (283 lines, 11K)
+[✓] 05_network-corridor-proof.txt       (307 lines, 12K)
+[✓] evidence.json                       (245 lines, 7.7K)
+
+Additional Files:
+[✓] LAB3B_COMPLIANCE_VERIFICATION.txt   (490 lines, 19K)  - 6 evidence points mapped to Lab 3B
+[✓] README.md                           (151 lines, 5.1K) - Evidence pack guide
+[✓] AUDITOR_NARRATIVE.txt               (31 lines, 2.5K)  - See Deliverable B
+
+Total Evidence: 1,750 lines, 67.2K of audit documentation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ DELIVERABLE B — AUDITOR NARRATIVE (8-12 lines)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+File: audit-pack/AUDITOR_NARRATIVE.txt
+
+Content Preview:
+"This infrastructure design satisfies APPI (Act on the Protection of Personal 
+Information) data residency requirements through a 'compute travels, data stays' 
+architecture. All Personal Health Information (PHI) resides exclusively in Tokyo 
+(ap-northeast-1) with zero database replication to any other AWS region...
+
+...We cannot store PHI outside Japan because APPI mandates that sensitive personal 
+data processed by Japanese entities must remain within national jurisdiction unless 
+explicit consent is obtained, and healthcare data carries heightened protection 
+requirements that make cross-border storage non-compliant..."
+
+✓ Length: 12 lines (within required 8-12 lines)
+✓ Explains APPI compliance architecture
+✓ Answers "why DB cannot be placed abroad"
+✓ Includes evidence references
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ VERIFICATION COMMANDS (CLI PROOF)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Data Residency Proof ✅
+   ------------------------
+   Tokyo RDS:
+   $ aws rds describe-db-instances --region ap-northeast-1
+   Result: chrisbarm-rds01 in ap-northeast-1c
+   
+   São Paulo RDS:
+   $ aws rds describe-db-instances --region sa-east-1
+   Result: [] (empty - no databases)
+
+2. Edge Proof (CloudFront) ✅
+   ---------------------------
+   $ aws cloudfront list-distributions
+   Result: E25VKCDLJWL0Y9 (d1lnazblye9u8p.cloudfront.net)
+   
+   $ curl -I https://d1lnazblye9u8p.cloudfront.net/
+   Headers: X-Cache, X-Amz-Cf-Pop (CloudFront serving)
+
+3. WAF Proof ✅
+   ------------
+   $ aws wafv2 list-web-acls --scope CLOUDFRONT --region us-east-1
+   Result: liberdade-waf-acl (48884250-b69b-4945-9da7-1e883033164f)
+   
+   Rules:
+   - RateLimitRule (2000 req/5min)
+   - AWSManagedRulesCommonRuleSet
+   - AWSManagedRulesKnownBadInputsRuleSet
+
+4. Change Proof (CloudTrail) ✅
+   -----------------------------
+   $ aws cloudtrail lookup-events --region ap-northeast-1 --max-results 10
+   Result: Recent events showing DescribeVpc, DescribeSecret, GetParameter, etc.
+   
+   Trails Active:
+   - chrisbarm-audit-trail-tokyo (ap-northeast-1)
+   - liberdade-audit-trail-saopaulo (sa-east-1)
+
+5. Network Corridor Proof (TGW) ✅
+   --------------------------------
+   $ aws ec2 describe-transit-gateway-peering-attachments --region ap-northeast-1
+   Result: tgw-attach-06603e5f905264592 (state: available)
+   
+   TGWs:
+   - shinjuku-tgw01 (tgw-06e91c48e69f6fd21) - Tokyo
+   - liberdade-tgw01 (tgw-0fc03b3b4fd951ecf) - São Paulo
+   
+   Routes:
+   - Tokyo → São Paulo: 10.1.0.0/16 via TGW peering
+   - São Paulo → Tokyo: 10.0.0.0/16 via TGW peering
+
+6. S3 Bucket Verification ✅
+   -------------------------
+   CloudTrail Logs:
+   $ aws s3 ls s3://chrisbarm-cloudtrail-logs-198547498722/
+   Prefixes: tokyo/, saopaulo/
+   
+   CloudFront Logs:
+   $ aws s3 ls s3://chrisbarm-cloudfront-logs-198547498722/
+   Prefix: saopaulo-cf/
+   
+   VPC Flow Logs:
+   $ aws s3 ls s3://chrisbarm-flowlogs-198547498722/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ MALGUS SCRIPTS (OPTIONAL — ENHANCED EVIDENCE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Available Scripts:
+[✓] malgus_residency_proof.py               - DB location verification
+[✓] malgus_tgw_corridor_proof.py            - TGW attachments & routes
+[✓] malgus_cloudtrail_last_changes.py       - Recent CloudTrail events
+[✓] malgus_waf_summary.py                   - WAF logs analysis
+[✓] malgus_cloudfront_log_explainer.py      - Hit/Miss/RefreshHit analysis
+[✓] malgus_data_residency_enhanced.py       - Enhanced residency proof
+[✓] malgus_network_corridor_proof.py        - Network corridor evidence
+[✓] malgus_audit_evidence_package.py        - Complete evidence bundle
+
+Note: Evidence pack already contains all required proof. Scripts provide 
+      additional automation for evidence collection if needed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ COMPLIANCE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Requirement                Status    Evidence File
+─────────────────────────  ────────  ───────────────────────────────────
+Data Residency             ✅ PASS   01_data-residency-proof.txt
+Network Corridor           ✅ PASS   05_network-corridor-proof.txt
+Edge Security (CF)         ✅ PASS   02_edge-proof-cloudfront.txt
+Edge Security (WAF)        ✅ PASS   03_waf-proof.txt
+Change Trail               ✅ PASS   04_cloudtrail-change-proof.txt
+Log Centralization         ✅ PASS   All files (Tokyo S3)
+Architecture Design        ✅ PASS   00_architecture-summary.md
+Auditor Narrative          ✅ PASS   AUDITOR_NARRATIVE.txt
+
+Overall Compliance: 100% ✅
+APPI Requirements: MET ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ KEY FINDINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Data Sovereignty:
+  ✓ RDS exists ONLY in Tokyo (ap-northeast-1)
+  ✓ Zero databases in São Paulo (sa-east-1)
+  ✓ Zero databases in any other region
+  ✓ No cross-region replication
+
+Network Security:
+  ✓ Transit Gateway peering (not VPC peering)
+  ✓ Explicit routes in both regions
+  ✓ TGW peering state: available
+  ✓ No direct VPC-to-VPC connectivity
+
+Edge Protection:
+  ✓ CloudFront distribution deployed
+  ✓ WAF with 3 protection layers
+  ✓ Rate limiting: 2000 req/5min per IP
+  ✓ Origin protection via custom headers
+
+Audit Trail:
+  ✓ CloudTrail active in both regions
+  ✓ Log file validation enabled
+  ✓ 7-year retention (Glacier archival)
+  ✓ All logs centralized in Tokyo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ SUBMISSION INSTRUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Compress the audit-pack/ folder:
+   $ cd "C:/Users/caspe/Documents/TheoWAF/class7/Armageddon/Project- Armageddon/Lab3b"
+   $ zip -r lab3b-audit-evidence.zip audit-pack/
+
+2. Verify package contents:
+   $ unzip -l lab3b-audit-evidence.zip
+
+3. Submit:
+   - lab3b-audit-evidence.zip (complete audit pack)
+   - AUDITOR_NARRATIVE.txt (if separate submission required)
+
+4. Package contents:
+   - 7 required proof files
+   - 1 evidence.json (machine-readable)
+   - 1 auditor narrative
+   - 1 README.md (navigation guide)
+
+Total Size: ~67KB (uncompressed)
+Total Files: 9 files
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ FINAL CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Infrastructure Deployment:
+[✓] Tokyo region deployed (main.tf)
+[✓] São Paulo region deployed (saopaulo/)
+[✓] TGW peering established and active
+[✓] CloudFront + WAF configured
+[✓] CloudTrail enabled (both regions)
+[✓] VPC Flow Logs enabled (both regions)
+
+Evidence Collection:
+[✓] All AWS CLI verification commands executed
+[✓] Results captured in proof files
+[✓] evidence.json generated with compliance summary
+[✓] Auditor narrative written (12 lines)
+
+Documentation:
+[✓] Architecture summary complete
+[✓] All 6 proof files created
+[✓] README.md navigation guide
+[✓] Verification commands documented
+
+Quality Assurance:
+[✓] All proof files reviewed
+[✓] CLI commands tested and verified
+[✓] Compliance status: 100%
+[✓] No errors or warnings
+
+Ready for Submission: ✅ YES
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Lab 3B — Japan Medical APPI Compliance
+Submission Status: COMPLETE ✅
+Generated: 2026-02-02
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

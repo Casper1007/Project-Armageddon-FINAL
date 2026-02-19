@@ -1,0 +1,582 @@
+LEFT:  C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b
+RIGHT: C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B
+
+========================================================================================
+DIFF: audit_logging.tf  <->  Terraform/audit_logging.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\audit_logging.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\audit_logging.tf
+@@ -10,13 +10,12 @@
+ 
+ # CloudTrail Bucket (Tokyo)
+ resource "aws_s3_bucket" "chrisbarm_cloudtrail_bucket" {
+-  bucket        = "chrisbarm-cloudtrail-logs-${data.aws_caller_identity.current.account_id}"
+-  force_destroy = var.allow_teardown
++  bucket = "chrisbarm-cloudtrail-logs-${data.aws_caller_identity.current.account_id}"
+   tags = {
+-    Name       = "chrisbarm-cloudtrail-logs"
+-    Purpose    = "Audit Evidence - Change Trail"
+-    Compliance = "APPI"
+-    DataClass  = "AuditLog"
++    Name        = "chrisbarm-cloudtrail-logs"
++    Purpose     = "Audit Evidence - Change Trail"
++    Compliance  = "APPI"
++    DataClass   = "AuditLog"
+   }
+ }
+ 
+@@ -44,7 +43,7 @@
+     }
+ 
+     expiration {
+-      days = 2555 # 7 years for compliance
++      days = 2555  # 7 years for compliance
+     }
+   }
+ }
+@@ -83,13 +82,12 @@
+ 
+ # CloudFront Logs Bucket (Tokyo)
+ resource "aws_s3_bucket" "chrisbarm_cloudfront_logs_bucket" {
+-  bucket        = "chrisbarm-cloudfront-logs-${data.aws_caller_identity.current.account_id}"
+-  force_destroy = var.allow_teardown
++  bucket = "chrisbarm-cloudfront-logs-${data.aws_caller_identity.current.account_id}"
+   tags = {
+-    Name       = "chrisbarm-cloudfront-logs"
+-    Purpose    = "Audit Evidence - Edge Access Trail"
+-    Compliance = "APPI"
+-    DataClass  = "AccessLog"
++    Name        = "chrisbarm-cloudfront-logs"
++    Purpose     = "Audit Evidence - Edge Access Trail"
++    Compliance  = "APPI"
++    DataClass   = "AccessLog"
+   }
+ }
+ 
+@@ -115,13 +113,12 @@
+ 
+ # WAF Logs Bucket (Tokyo)
+ resource "aws_s3_bucket" "chrisbarm_waf_logs_bucket" {
+-  bucket        = "chrisbarm-waf-logs-${data.aws_caller_identity.current.account_id}"
+-  force_destroy = var.allow_teardown
++  bucket = "chrisbarm-waf-logs-${data.aws_caller_identity.current.account_id}"
+   tags = {
+-    Name       = "chrisbarm-waf-logs"
+-    Purpose    = "Audit Evidence - Security Events"
+-    Compliance = "APPI"
+-    DataClass  = "SecurityLog"
++    Name        = "chrisbarm-waf-logs"
++    Purpose     = "Audit Evidence - Security Events"
++    Compliance  = "APPI"
++    DataClass   = "SecurityLog"
+   }
+ }
+ 
+@@ -134,13 +131,12 @@
+ 
+ # VPC Flow Logs Bucket (Tokyo)
+ resource "aws_s3_bucket" "chrisbarm_flowlogs_bucket" {
+-  bucket        = "chrisbarm-flowlogs-${data.aws_caller_identity.current.account_id}"
+-  force_destroy = var.allow_teardown
++  bucket = "chrisbarm-flowlogs-${data.aws_caller_identity.current.account_id}"
+   tags = {
+-    Name       = "chrisbarm-flowlogs"
+-    Purpose    = "Audit Evidence - Network Corridor Proof"
+-    Compliance = "APPI"
+-    DataClass  = "FlowLog"
++    Name        = "chrisbarm-flowlogs"
++    Purpose     = "Audit Evidence - Network Corridor Proof"
++    Compliance  = "APPI"
++    DataClass   = "FlowLog"
+   }
+ }
+ 
+@@ -149,41 +145,6 @@
+   versioning_configuration {
+     status = "Enabled"
+   }
+-}
+-
+-resource "aws_s3_bucket_policy" "chrisbarm_flowlogs_policy" {
+-  bucket = aws_s3_bucket.chrisbarm_flowlogs_bucket.id
+-  policy = jsonencode({
+-    Version = "2012-10-17"
+-    Statement = [
+-      {
+-        Sid    = "AWSLogDeliveryAclCheck"
+-        Effect = "Allow"
+-        Principal = {
+-          Service = "delivery.logs.amazonaws.com"
+-        }
+-        Action = [
+-          "s3:GetBucketAcl",
+-          "s3:GetBucketLocation"
+-        ]
+-        Resource = aws_s3_bucket.chrisbarm_flowlogs_bucket.arn
+-      },
+-      {
+-        Sid    = "AWSLogDeliveryWrite"
+-        Effect = "Allow"
+-        Principal = {
+-          Service = "delivery.logs.amazonaws.com"
+-        }
+-        Action   = "s3:PutObject"
+-        Resource = "${aws_s3_bucket.chrisbarm_flowlogs_bucket.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+-        Condition = {
+-          StringEquals = {
+-            "s3:x-amz-acl" = "bucket-owner-full-control"
+-          }
+-        }
+-      }
+-    ]
+-  })
+ }
+ 
+ # ============================================================================
+@@ -195,7 +156,7 @@
+   s3_bucket_name                = aws_s3_bucket.chrisbarm_cloudtrail_bucket.id
+   include_global_service_events = true
+   is_multi_region_trail         = false
+-  enable_log_file_validation    = true # Immutability proof
++  enable_log_file_validation    = true  # Immutability proof
+ 
+   event_selector {
+     read_write_type           = "All"
+
+========================================================================================
+DIFF: aws_security_group.chrisbarm_rds_sg01.tf  <->  Terraform/aws_security_group.chrisbarm_rds_sg01.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\aws_security_group.chrisbarm_rds_sg01.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\aws_security_group.chrisbarm_rds_sg01.tf
+@@ -1,4 +1,4 @@
+-# Explanation: Tokyoâ€™s vault opens only to approved clinicsâ€”Liberdade gets DB access, the public gets nothing.
++﻿# Explanation: Tokyoâ€™s vault opens only to approved clinicsâ€”Liberdade gets DB access, the public gets nothing.
+ resource "aws_security_group_rule" "shinjuku_rds_ingress_from_liberdade01" {
+   type              = "ingress"
+   security_group_id = aws_security_group.chrisbarm_rds_sg01.id
+
+========================================================================================
+DIFF: main.tf  <->  Terraform/main.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\main.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\main.tf
+@@ -1,7 +1,6 @@
+ ############################################
+ # Locals (naming convention: satellite-*)
+ ############################################
+-# Final CI/CD verification trigger (non-functional comment).
+ locals {
+   name_prefix = var.project_name
+   ports_http  = 80
+
+========================================================================================
+DIFF: outputs.tf  <->  Terraform/outputs.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\outputs.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\outputs.tf
+@@ -1,4 +1,4 @@
+-##
++﻿##
+ # These outputs are required for cross-region remote state consumption by SÃ£o Paulo.
+ #
+ # - tokyo_vpc_cidr: Used for TGW routing in SÃ£o Paulo
+
+========================================================================================
+DIFF: tokyo_routes.tf  <->  Terraform/tokyo_routes.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\tokyo_routes.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\tokyo_routes.tf
+@@ -1,4 +1,4 @@
+-# Explanation: Shinjuku returns traffic to Liberdade—doctors need answers, not one-way tunnels.
++﻿# Explanation: Shinjuku returns traffic to Liberdade—doctors need answers, not one-way tunnels.
+ resource "aws_route" "shinjuku_to_liberdade_route01" {
+   route_table_id         = aws_route_table._private_rt01.id
+   destination_cidr_block = var.saopaulo_vpc_cidr
+
+========================================================================================
+DIFF: tokyo_tgw.tf  <->  Terraform/tokyo_tgw.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\tokyo_tgw.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\tokyo_tgw.tf
+@@ -1,9 +1,9 @@
+-# Explanation: Shinjuku Station is the hub—Tokyo is the data authority.
++﻿# Explanation: Shinjuku Station is the hub—Tokyo is the data authority.
+ resource "aws_ec2_transit_gateway" "shinjuku_tgw01" {
+-  description                     = "shinjuku-tgw01 (Tokyo hub)"
++  description = "shinjuku-tgw01 (Tokyo hub)"
+   default_route_table_association = "disable"
+   default_route_table_propagation = "disable"
+-  tags                            = { Name = "shinjuku-tgw01" }
++  tags        = { Name = "shinjuku-tgw01" }
+ }
+ 
+ resource "aws_ec2_transit_gateway_route_table" "shinjuku_tgw_rt01" {
+@@ -13,12 +13,12 @@
+ 
+ # Explanation: Shinjuku connects to the Tokyo VPC—this is the gate to the medical records vault.
+ resource "aws_ec2_transit_gateway_vpc_attachment" "shinjuku_attach_tokyo_vpc01" {
+-  transit_gateway_id                              = aws_ec2_transit_gateway.shinjuku_tgw01.id
+-  vpc_id                                          = aws_vpc.chrisbarm_vpc01.id
+-  subnet_ids                                      = [aws_subnet.chrisbarm_private_subnets[0].id, aws_subnet.chrisbarm_private_subnets[1].id]
++  transit_gateway_id = aws_ec2_transit_gateway.shinjuku_tgw01.id
++  vpc_id             = aws_vpc.chrisbarm_vpc01.id
++  subnet_ids         = [aws_subnet.chrisbarm_private_subnets[0].id, aws_subnet.chrisbarm_private_subnets[1].id]
+   transit_gateway_default_route_table_association = false
+   transit_gateway_default_route_table_propagation = false
+-  tags                                            = { Name = "shinjuku-attach-tokyo-vpc01" }
++  tags               = { Name = "shinjuku-attach-tokyo-vpc01" }
+ }
+ 
+ resource "aws_ec2_transit_gateway_route_table_association" "shinjuku_vpc_assoc01" {
+@@ -33,19 +33,12 @@
+ 
+ # Explanation: Shinjuku opens a corridor request to Liberdade—compute may travel, data may not.
+ resource "aws_ec2_transit_gateway_peering_attachment" "shinjuku_to_liberdade_peer01" {
+-  count                   = var.enable_saopaulo_tgw_peering && local.resolved_saopaulo_tgw_id != null ? 1 : 0
++  count                   = var.enable_saopaulo_tgw_peering && var.saopaulo_tgw_id != null ? 1 : 0
+   transit_gateway_id      = aws_ec2_transit_gateway.shinjuku_tgw01.id
+   peer_region             = "sa-east-1"
+-  peer_transit_gateway_id = local.resolved_saopaulo_tgw_id
+-  peer_account_id         = local.resolved_saopaulo_account_id
++  peer_transit_gateway_id = var.saopaulo_tgw_id # set from Sao Paulo state output
++  peer_account_id         = var.saopaulo_account_id
+   tags                    = { Name = "shinjuku-to-liberdade-peer01" }
+-
+-  lifecycle {
+-    precondition {
+-      condition     = !var.enable_saopaulo_tgw_peering || local.resolved_saopaulo_tgw_id != null
+-      error_message = "Sao Paulo TGW peering is enabled but no Sao Paulo TGW ID is available. Apply ./saopaulo first (to produce saopaulo_tgw_id), or set var.saopaulo_tgw_id explicitly."
+-    }
+-  }
+ }
+ 
+ # Note: Peering attachments cannot be associated with route tables in Tokyo
+@@ -54,17 +47,17 @@
+ 
+ # Data source to verify peering is in 'available' state before creating routes
+ data "aws_ec2_transit_gateway_peering_attachment" "shinjuku_peer_status" {
+-  count = var.enable_saopaulo_tgw_peering && local.resolved_saopaulo_tgw_id != null ? 1 : 0
++  count = var.enable_saopaulo_tgw_peering && var.saopaulo_tgw_id != null ? 1 : 0
+   id    = aws_ec2_transit_gateway_peering_attachment.shinjuku_to_liberdade_peer01[0].id
+-
++  
+   depends_on = [aws_ec2_transit_gateway_peering_attachment.shinjuku_to_liberdade_peer01]
+ }
+ 
+ resource "aws_ec2_transit_gateway_route" "shinjuku_to_liberdade_tgw_route01" {
+-  count                          = var.enable_saopaulo_tgw_peering && local.resolved_saopaulo_tgw_id != null ? 1 : 0
++  count                          = var.enable_saopaulo_tgw_peering && var.saopaulo_tgw_id != null ? 1 : 0
+   destination_cidr_block         = var.saopaulo_vpc_cidr
+   transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment.shinjuku_to_liberdade_peer01[0].id
+   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.shinjuku_tgw_rt01.id
+   # Must wait for peering to be accepted (state = available) before creating route
+-  depends_on = [data.aws_ec2_transit_gateway_peering_attachment.shinjuku_peer_status]
++  depends_on                     = [data.aws_ec2_transit_gateway_peering_attachment.shinjuku_peer_status]
+ }
+
+========================================================================================
+DIFF: variables.tf  <->  Terraform/variables.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\variables.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Terraform\variables.tf
+@@ -1,4 +1,4 @@
+-variable "aws_region" {
++﻿variable "aws_region" {
+   description = "AWS Region for the Chrisbarm lab environment."
+   type        = string
+   default     = "us-east-1"
+@@ -158,9 +158,3 @@
+   type        = bool
+   default     = false
+ }
+-
+-variable "allow_teardown" {
+-  description = "When true, allows destructive teardown behaviors (e.g., force-destroy versioned/non-empty S3 audit buckets). Keep false by default."
+-  type        = bool
+-  default     = false
+-}
+
+========================================================================================
+DIFF: saopaulo/data.tf  <->  Sao Paulo/data.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\data.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\data.tf
+@@ -11,27 +11,8 @@
+   }
+ }
+ 
+-# Local fallback: read Tokyo outputs from the sibling stack's local state file.
+-# This avoids manual copy/paste of the TGW peering attachment ID during the lab.
+-data "terraform_remote_state" "tokyo_local" {
+-  count   = var.use_tokyo_remote_state ? 0 : (fileexists("${path.module}/../terraform.tfstate") ? 1 : 0)
+-  backend = "local"
+-  config = {
+-    path = "${path.module}/../terraform.tfstate"
+-  }
+-}
+-
+ locals {
+   tokyo_vpc_cidr     = var.use_tokyo_remote_state ? data.terraform_remote_state.tokyo[0].outputs.tokyo_vpc_cidr : var.tokyo_vpc_cidr
+   tokyo_rds_endpoint = var.use_tokyo_remote_state ? data.terraform_remote_state.tokyo[0].outputs.tokyo_rds_endpoint : var.tokyo_rds_endpoint
+   tokyo_rds_port     = var.use_tokyo_remote_state ? try(data.terraform_remote_state.tokyo[0].outputs.tokyo_rds_port, 3306) : var.tokyo_rds_port
+-
+-  tokyo_tgw_peering_attachment_id = try(
+-    coalesce(
+-      var.tokyo_tgw_peering_attachment_id,
+-      try(data.terraform_remote_state.tokyo[0].outputs.tokyo_tgw_peering_attachment_id, null),
+-      try(data.terraform_remote_state.tokyo_local[0].outputs.tokyo_tgw_peering_attachment_id, null)
+-    ),
+-    null
+-  )
+ }
+
+========================================================================================
+DIFF: saopaulo/main.tf  <->  Sao Paulo/main.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\main.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\main.tf
+@@ -240,19 +240,19 @@
+ # ALB + Target Group + Listener (Origin Header Rule)
+ ############################################
+ resource "aws_lb" "liberdade_alb01" {
+-  name               = "${local.name_prefix}-alb01b"
++  name               = "${local.name_prefix}-alb01"
+   internal           = false
+   load_balancer_type = "application"
+   security_groups    = [aws_security_group.liberdade_alb_sg01.id]
+   subnets            = aws_subnet.liberdade_public_subnets[*].id
+ 
+   tags = {
+-    Name = "${local.name_prefix}-alb01b"
++    Name = "${local.name_prefix}-alb01"
+   }
+ }
+ 
+ resource "aws_lb_target_group" "liberdade_tg01" {
+-  name     = "${local.name_prefix}-tg01b"
++  name     = "${local.name_prefix}-tg01"
+   port     = local.ports_http
+   protocol = "HTTP"
+   vpc_id   = aws_vpc.liberdade_vpc01.id
+@@ -263,7 +263,7 @@
+   }
+ 
+   tags = {
+-    Name = "${local.name_prefix}-tg01b"
++    Name = "${local.name_prefix}-tg01"
+   }
+ }
+ 
+@@ -308,6 +308,7 @@
+   instance_type = var.ec2_instance_type
+ 
+   network_interfaces {
++    device_index                = 0
+     associate_public_ip_address = false
+     security_groups             = [aws_security_group.liberdade_asg_sg01.id]
+   }
+@@ -351,20 +352,6 @@
+   comment             = "Liberdade CloudFront distribution"
+   default_root_object = ""
+ 
+-  # ============================================================================
+-  # AUDIT EVIDENCE — Edge Access Logging
+-  # ============================================================================
+-  logging_config {
+-    include_cookies = false
+-    bucket          = "chrisbarm-cloudfront-logs-${data.aws_caller_identity.saopaulo_current.account_id}.s3.amazonaws.com"
+-    prefix          = "saopaulo-cf/"
+-  }
+-
+-  # ============================================================================
+-  # AUDIT EVIDENCE — WAF Security Protection
+-  # ============================================================================
+-  web_acl_id = aws_wafv2_web_acl.liberdade_waf_acl.arn
+-
+   origin {
+     domain_name = aws_lb.liberdade_alb01.dns_name
+     origin_id   = "${local.name_prefix}-alb-origin"
+
+========================================================================================
+DIFF: saopaulo/outputs.tf  <->  Sao Paulo/outputs.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\outputs.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\outputs.tf
+@@ -2,3 +2,13 @@
+   description = "Sao Paulo Transit Gateway ID for cross-region peering"
+   value       = aws_ec2_transit_gateway.liberdade_tgw01.id
+ }
++
++output "tokyo_tgw_peering_attachment_state" {
++  description = "State of the TGW peering attachment as seen from Sao Paulo (null when no attachment ID provided)."
++  value       = local.liberdade_peer_state
++}
++
++output "tokyo_tgw_peering_attachment_available" {
++  description = "Whether the TGW peering attachment is available (true means routes/propagation can be created)."
++  value       = local.liberdade_peer_available
++}
+
+========================================================================================
+DIFF: saopaulo/providers.tf  <->  Sao Paulo/providers.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\providers.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\providers.tf
+@@ -2,9 +2,3 @@
+ provider "aws" {
+   region = "sa-east-1"
+ }
+-
+-# us-east-1 provider for CloudFront WAF (WAF for CloudFront must be in us-east-1)
+-provider "aws" {
+-  alias  = "us_east_1"
+-  region = "us-east-1"
+-}
+
+========================================================================================
+DIFF: saopaulo/sao_paulo_tgw.tf  <->  Sao Paulo/sao_paulo_tgw.tf
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\sao_paulo_tgw.tf
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\sao_paulo_tgw.tf
+@@ -11,11 +11,28 @@
+   tags               = { Name = "liberdade-tgw-rt01" }
+ }
+ 
++data "aws_ec2_transit_gateway_peering_attachment" "liberdade_peer01" {
++  count = var.tokyo_tgw_peering_attachment_id == null ? 0 : 1
++  id    = var.tokyo_tgw_peering_attachment_id
++}
++
++locals {
++  liberdade_peer_state      = try(data.aws_ec2_transit_gateway_peering_attachment.liberdade_peer01[0].state, null)
++  liberdade_peer_manageable = local.liberdade_peer_state == "pendingAcceptance" || local.liberdade_peer_state == "available"
++  liberdade_peer_available  = local.liberdade_peer_state == "available"
++}
++
+ # Accept the corridor from Shinjuku
+ resource "aws_ec2_transit_gateway_peering_attachment_accepter" "liberdade_accept_peer01" {
+-  count                         = local.tokyo_tgw_peering_attachment_id == null ? 0 : 1
+-  transit_gateway_attachment_id = local.tokyo_tgw_peering_attachment_id
++  count                         = local.liberdade_peer_manageable ? 1 : 0
++  transit_gateway_attachment_id = var.tokyo_tgw_peering_attachment_id
+   tags                          = { Name = "liberdade-accept-peer01" }
++}
++
++import {
++  for_each = local.liberdade_peer_state == "available" ? { peer = var.tokyo_tgw_peering_attachment_id } : {}
++  to       = aws_ec2_transit_gateway_peering_attachment_accepter.liberdade_accept_peer01[0]
++  id       = each.value
+ }
+ 
+ # Attach Liberdade VPC to its TGW
+@@ -38,13 +55,27 @@
+   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.liberdade_tgw_rt01.id
+ }
+ 
+-# Note: Peering attachments cannot be associated with route tables in São Paulo either
+-# AWS requires static routes only for cross-region peering
++resource "aws_ec2_transit_gateway_route_table_association" "liberdade_peer_assoc01" {
++  count                          = local.liberdade_peer_available ? 1 : 0
++  transit_gateway_attachment_id  = var.tokyo_tgw_peering_attachment_id
++  transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.liberdade_tgw_rt01.id
++  
++  # Ensure peering is accepted before associating
++  depends_on = [aws_ec2_transit_gateway_peering_attachment_accepter.liberdade_accept_peer01]
++}
++
++# NOTE: Propagation is NOT supported for peering attachments - AWS limitation
++# Static routes must be used instead (see liberdade_to_shinjuku_tgw_route01 below)
+ 
+ resource "aws_ec2_transit_gateway_route" "liberdade_to_shinjuku_tgw_route01" {
+-  count                          = local.tokyo_tgw_peering_attachment_id == null ? 0 : 1
++  count                          = local.liberdade_peer_available ? 1 : 0
+   destination_cidr_block         = local.tokyo_vpc_cidr
+-  transit_gateway_attachment_id  = aws_ec2_transit_gateway_peering_attachment_accepter.liberdade_accept_peer01[0].id
++  transit_gateway_attachment_id  = var.tokyo_tgw_peering_attachment_id
+   transit_gateway_route_table_id = aws_ec2_transit_gateway_route_table.liberdade_tgw_rt01.id
+-  depends_on                     = [aws_ec2_transit_gateway_peering_attachment_accepter.liberdade_accept_peer01]
++  
++  # Ensure peering is accepted and associated before creating routes
++  depends_on = [
++    aws_ec2_transit_gateway_peering_attachment_accepter.liberdade_accept_peer01,
++    aws_ec2_transit_gateway_route_table_association.liberdade_peer_assoc01
++  ]
+ }
+
+========================================================================================
+DIFF: saopaulo/terraform.tfvars  <->  Sao Paulo/terraform.tfvars
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\saopaulo\terraform.tfvars
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Sao Paulo\terraform.tfvars
+@@ -15,7 +15,7 @@
+ tokyo_state_region = "us-east-1"
+ 
+ # Peering attachment ID from Tokyo (set after Tokyo apply)
+-tokyo_tgw_peering_attachment_id = null
++tokyo_tgw_peering_attachment_id = "tgw-attach-054235d8e2b012cdd"
+ 
+ 
+ 
+
+========================================================================================
+DIFF: malgus_network_corridor_proof.py  <->  Python/malgus_network_corridor_proof.py
+----------------------------------------------------------------------------------------
+--- C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b\malgus_network_corridor_proof.py
++++ C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Project-Armageddon-FINAL\Lab 3\Lab 3B\Python\malgus_network_corridor_proof.py
+@@ -14,7 +14,6 @@
+ 
+ import boto3
+ import json
+-import sys
+ from datetime import datetime
+ 
+ def get_tgw_info(region):
+@@ -37,29 +36,15 @@
+     ec2 = boto3.client('ec2', region_name=region)
+     try:
+         peerings = ec2.describe_transit_gateway_peering_attachments()
+-        results = []
+-        for p in peerings.get('TransitGatewayPeeringAttachments', []):
+-            requester = p.get('RequesterTgwInfo', {}) or {}
+-            accepter = p.get('AccepterTgwInfo', {}) or {}
+-
+-            if requester.get('Region') == region:
+-                local = requester
+-                peer = accepter
+-            else:
+-                local = accepter
+-                peer = requester
+-
+-            results.append({
+-                "attachment_id": p.get('TransitGatewayAttachmentId'),
+-                "state": p.get('State') or (p.get('Status', {}) or {}).get('Code'),
+-                "local_tgw": local.get('TransitGatewayId'),
+-                "peer_tgw": peer.get('TransitGatewayId'),
+-                "peer_region": peer.get('Region'),
+-                "requester_region": requester.get('Region'),
+-                "accepter_region": accepter.get('Region'),
+-            })
+-        return results
+-    except Exception:
++        return [{
++            "attachment_id": p['TransitGatewayAttachmentId'],
++            "state": p['State'],
++            "local_tgw": p['TransitGatewayId'],
++            "peer_tgw": p['AccepterTgwInfo']['TransitGatewayId'],
++            "peer_region": p['AccepterTgwInfo']['Region'],
++            "requester_region": p['RequesterTgwInfo']['Region']
++        } for p in peerings.get('TransitGatewayPeeringAttachments', [])]
++    except:
+         return []
+ 
+ def get_tgw_route_tables(region, tgw_id):
+@@ -189,8 +174,5 @@
+     print("\nFull Evidence:")
+     print(json.dumps(evidence, indent=2))
+ 
+-    if evidence["compliance_check"]["assertion"].startswith("FAIL"):
+-        sys.exit(2)
+-
+ if __name__ == "__main__":
+     main()
+
