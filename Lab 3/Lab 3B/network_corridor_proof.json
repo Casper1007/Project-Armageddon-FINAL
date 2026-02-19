@@ -1,0 +1,89 @@
+{
+  "timestamp": "2026-02-18T14:34:01.080770Z",
+  "compliance_framework": "APPI",
+  "proof_type": "network_corridor",
+  "transit_gateways": {
+    "tokyo": [
+      {
+        "tgw_id": "tgw-0812f0073bc3d37a3",
+        "state": "available",
+        "description": "shinjuku-tgw01 (Tokyo hub)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      }
+    ],
+    "saopaulo": [
+      {
+        "tgw_id": "tgw-01144921b0bea9f52",
+        "state": "available",
+        "description": "liberdade-tgw01 (Sao Paulo spoke)",
+        "default_route_table_association": "enable",
+        "default_route_table_propagation": "enable"
+      },
+      {
+        "tgw_id": "tgw-0497d6f12cf552d21",
+        "state": "available",
+        "description": "liberdade-tgw01 (Sao Paulo spoke)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      },
+      {
+        "tgw_id": "tgw-0c6571915609a9ca0",
+        "state": "available",
+        "description": "liberdade-tgw01 (Sao Paulo spoke)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      }
+    ]
+  },
+  "peering_attachments": {
+    "tokyo": [],
+    "saopaulo": []
+  },
+  "route_tables": {
+    "tokyo": [
+      {
+        "route_table_id": "tgw-rtb-01e1fac72e1e76678",
+        "state": "available",
+        "routes": [
+          {
+            "cidr": "10.0.0.0/16",
+            "attachment_id": "tgw-attach-0a822ba7864254dc8",
+            "type": "propagated"
+          },
+          {
+            "cidr": "10.1.0.0/16",
+            "attachment_id": "tgw-attach-057833223f0a6b1be",
+            "type": "static"
+          }
+        ]
+      }
+    ],
+    "saopaulo": [
+      {
+        "route_table_id": "tgw-rtb-078e391be3a23d579",
+        "state": "available",
+        "routes": []
+      }
+    ]
+  },
+  "vpc_peering_connections": {
+    "tokyo": [],
+    "saopaulo": []
+  },
+  "compliance_check": {
+    "tokyo_has_tgw": true,
+    "saopaulo_has_tgw": true,
+    "peering_exists": false,
+    "peering_active": false,
+    "no_vpc_peering": true,
+    "assertion": "FAIL \u274c"
+  },
+  "evidence_summary": {
+    "description": "Transit Gateway provides controlled corridor between regions",
+    "tokyo_tgw_count": 1,
+    "saopaulo_tgw_count": 3,
+    "active_peerings": 0,
+    "vpc_peering_violations": 0
+  }
+}

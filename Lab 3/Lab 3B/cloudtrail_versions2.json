@@ -1,0 +1,533 @@
+{
+    "Versions": [
+        {
+            "ETag": "\"677990fdcc31c3ccb878a895695c944f\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 19539,
+            "StorageClass": "STANDARD",
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0540Z_NBsTLICGNa9IhieM.json.gz",
+            "VersionId": "fMP33c7pmmnWlqKWaspzF3sMdJBPaKPU",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:37:19+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"ec34f63355156633de66785a76b78bf3\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 10091,
+            "StorageClass": "STANDARD",
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0545Z_UebQOf8BLgYgZJiu.json.gz",
+            "VersionId": "IwgprhuFJBbIWhJKAHNOh2ZgbaDQb9ni",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:42:19+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"25935791a31517ee28124b936aac33b6\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 39261,
+            "StorageClass": "STANDARD",
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0550Z_kRd4mGT52zn3zjo3.json.gz",
+            "VersionId": "3YJCt9G1mQWdY50h9f9IMqZnm1nLrkp0",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:47:19+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"34e84c8ebf33dfe5d0b32c0bf488d859\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 59294,
+            "StorageClass": "STANDARD",
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0555Z_AARocTg8IOhwi5Df.json.gz",
+            "VersionId": "BSYAEUX9KjnVzyq9l8aJBaNKGVOUcVl.",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:52:09+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"9a4713b97994da6f28c313f5f0f0cd7f\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 2819,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail-Digest/sa-east-1/2026/02/19/198547498722_CloudTrail-Digest_sa-east-1_liberdade-audit-trail-saopaulo_sa-east-1_20260219T044021Z.json.gz",
+            "VersionId": "kcRRngRkKpVugMf8.U7UbnnlRiz1Tq0r",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:39:13+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"ee7a8b685aac28c16712959a39230f7a\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 10853,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T0445Z_K8Qy5hz195y2CR85.json.gz",
+            "VersionId": "aUHgd_9Tyv_IG7Y1Xn7TKVOXpSjhO1b1",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:38:31+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"bff991ff11461d17e7d2b0c88651cdbc\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 11854,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T1945Z_pUprDeGAlCbBRB7P.json.gz",
+            "VersionId": "ETXiq2O80er4vwL2OUIH7odI6DTdRQKP",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:38:19+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"5996d006cb5609924eb4b9531f700e5a\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 11089,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T2010Z_N44t8sHk6m6AJkbM.json.gz",
+            "VersionId": "p14tAzPni6x7FDWP543NQVCknBiz9Vj8",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:33:05+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"aa668a97f2b53bb6053e84cae02622ee\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 11054,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T0030Z_bAUhTbJ3ziNYwQmX.json.gz",
+            "VersionId": "r.1Lb_uri6nCExivyVjsinojlglGjrkB",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:38:45+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"c5164d866a4bdbc2dc68024244ca6c52\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 14535,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T1540Z_Zz5fHufUqhEBE3YO.json.gz",
+            "VersionId": "ARxfySOwdB2.fF6aEUZOG.JCDlDwn053",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:13:13+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"6e788e22ea91d049226a51a63b314d48\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 18242,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T1630Z_nPlWPjNoqY6LTpWy.json.gz",
+            "VersionId": "Qo1IMm1waE1LCY7c3ztkFQZkJCEfp2b.",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:13:30+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"cfd03194284a4d38f1fa1d2f8c562b8e\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 15450,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T2140Z_2XVTZffEOlB6tDfX.json.gz",
+            "VersionId": "K41mEgZpnD.ZDUi3kgS1z6CwuGNKq5Lz",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:13:02+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"596bad8fe8b07cff91c32445982603a1\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 14224,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0515Z_Rnj2SNeH8kKOaVVs.json.gz",
+            "VersionId": "sNwH7kIXcUCPqz5sq51FMZM.KPRDG64b",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:43:14+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"8c3017eec822bcc5ce575801a4d114e4\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 12743,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0520Z_2DXHCCfAmgsSVzPg.json.gz",
+            "VersionId": "oD34ebikpj.ElIiSNCcmWUDsB0AYuhxv",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:16:21+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"975ae6a5ca321650c1c769f1a7f3bcc2\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 8667,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0525Z_hXLI6R87iJ2ZGWaH.json.gz",
+            "VersionId": "FjhjikvoPlsyi9SjYO7OsXx3lCv5CcRX",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:21:12+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"e71cb9788f8eb7fa029e9fa1470236a8\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 12943,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0530Z_tEr3KBTnx92kLAEO.json.gz",
+            "VersionId": "DMRZExGgmqN6MLOZFBubBeJeBTan_BmK",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:26:22+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"03517d5f1666a5d6cb6c119b36e547a0\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 16096,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0535Z_oVwht8NH7f6TIIO1.json.gz",
+            "VersionId": "7tz4cJ_gZqSyPvkMz6J.ftdbOcLJU9Kl",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:31:22+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"803ecf943c756ed976a7461f3e4064ab\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 9615,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0540Z_QcC2XQcQ5cF1Qytb.json.gz",
+            "VersionId": "7qz_vm1a6S_VuAfP9MKOJ3pYLLZ.PIMj",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:36:23+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"711181590bd345ce2ee1fab711295c0f\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 9306,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0545Z_KHlOttPbvPHv8Jor.json.gz",
+            "VersionId": "L4kNyeKm8qOcKSBM45pfD3JwFc0dEXpv",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:41:24+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"d4bb1fa15ef9324d33d4a840c052824d\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 14030,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0550Z_psqxMxlfWhDmYXpC.json.gz",
+            "VersionId": "ld9SfnE1iq3OktGAQAIcLfthLwdofrGN",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:46:54+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        },
+        {
+            "ETag": "\"0e74ce8a194ff48a26c759f1171a8b63\"",
+            "ChecksumAlgorithm": [
+                "CRC64NVME"
+            ],
+            "ChecksumType": "FULL_OBJECT",
+            "Size": 14096,
+            "StorageClass": "STANDARD",
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0555Z_F3mwee1Hy35zgn2x.json.gz",
+            "VersionId": "KDwE6JIM.oLyW69t6_jKdmDw36cDAClh",
+            "IsLatest": false,
+            "LastModified": "2026-02-19T05:51:44+00:00",
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            }
+        }
+    ],
+    "DeleteMarkers": [
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0540Z_NBsTLICGNa9IhieM.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0545Z_UebQOf8BLgYgZJiu.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0550Z_kRd4mGT52zn3zjo3.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "AWSLogs/198547498722/CloudTrail/ap-northeast-1/2026/02/19/198547498722_CloudTrail_ap-northeast-1_20260219T0555Z_AARocTg8IOhwi5Df.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail-Digest/sa-east-1/2026/02/19/198547498722_CloudTrail-Digest_sa-east-1_liberdade-audit-trail-saopaulo_sa-east-1_20260219T044021Z.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T0445Z_K8Qy5hz195y2CR85.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T1945Z_pUprDeGAlCbBRB7P.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/16/198547498722_CloudTrail_sa-east-1_20260216T2010Z_N44t8sHk6m6AJkbM.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T0030Z_bAUhTbJ3ziNYwQmX.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T1540Z_Zz5fHufUqhEBE3YO.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T1630Z_nPlWPjNoqY6LTpWy.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/17/198547498722_CloudTrail_sa-east-1_20260217T2140Z_2XVTZffEOlB6tDfX.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0515Z_Rnj2SNeH8kKOaVVs.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0520Z_2DXHCCfAmgsSVzPg.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0525Z_hXLI6R87iJ2ZGWaH.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0530Z_tEr3KBTnx92kLAEO.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0535Z_oVwht8NH7f6TIIO1.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0540Z_QcC2XQcQ5cF1Qytb.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0545Z_KHlOttPbvPHv8Jor.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0550Z_psqxMxlfWhDmYXpC.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        },
+        {
+            "Owner": {
+                "ID": "61223322b8c84f6054134630e3868cf89f2fc9a47f7b78baca60f78e078f5f46"
+            },
+            "Key": "saopaulo/AWSLogs/198547498722/CloudTrail/sa-east-1/2026/02/19/198547498722_CloudTrail_sa-east-1_20260219T0555Z_F3mwee1Hy35zgn2x.json.gz",
+            "VersionId": "null",
+            "IsLatest": true,
+            "LastModified": "2026-02-19T05:59:17+00:00"
+        }
+    ],
+    "RequestCharged": null,
+    "Prefix": ""
+}
