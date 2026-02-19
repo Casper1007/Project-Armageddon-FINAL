@@ -1,0 +1,245 @@
+{
+  "audit_evidence_summary": {
+    "lab_id": "Lab3B",
+    "lab_name": "Japan Medical APPI Compliance",
+    "student_submission": "Audit Evidence Pack",
+    "generated_timestamp": "2026-02-15T00:00:00Z",
+    "aws_account_id": "198547498722",
+    "compliance_framework": "APPI (Act on the Protection of Personal Information)"
+  },
+  "data_residency_compliance": {
+    "status": "COMPLIANT",
+    "tokyo_region": {
+      "region": "ap-northeast-1",
+      "rds_instances": [
+        {
+          "db_identifier": "chrisbarm-rds01",
+          "availability_zone": "ap-northeast-1c",
+          "endpoint": "chrisbarm-rds01.cjyguam6c4nd.ap-northeast-1.rds.amazonaws.com",
+          "status": "available",
+          "contains_phi": true
+        }
+      ],
+      "rds_count": 1
+    },
+    "sao_paulo_region": {
+      "region": "sa-east-1",
+      "rds_instances": [],
+      "rds_count": 0
+    },
+    "all_other_regions": {
+      "rds_count": 0
+    },
+    "proof": "RDS exists ONLY in Tokyo (ap-northeast-1). No database replication to any other region."
+  },
+  "network_corridor_compliance": {
+    "status": "PENDING",
+    "tokyo_transit_gateway": {
+      "tgw_id": "tgw-0e67342ac14f11dcc",
+      "name": "shinjuku-tgw01",
+      "region": "ap-northeast-1",
+      "state": "available",
+      "role": "hub"
+    },
+    "sao_paulo_transit_gateway": {
+      "tgw_id": "tgw-0497d6f12cf552d21",
+      "name": "liberdade-tgw01",
+      "region": "sa-east-1",
+      "state": "available",
+      "role": "spoke"
+    },
+    "tgw_peering": {
+      "attachment_id": null,
+      "state": "not-created",
+      "requester_tgw": "tgw-0e67342ac14f11dcc",
+      "requester_region": "ap-northeast-1",
+      "accepter_tgw": "tgw-0497d6f12cf552d21",
+      "accepter_region": "sa-east-1",
+      "connection_status": "PENDING"
+    },
+    "tokyo_routes": [
+      {
+        "destination": "10.0.0.0/16",
+        "state": "active",
+        "type": "propagated",
+        "description": "Local Tokyo VPC"
+      },
+      {
+        "destination": "10.1.0.0/16",
+        "state": "pending",
+        "type": "static",
+        "description": "Remote São Paulo VPC via TGW peering"
+      }
+    ],
+    "sao_paulo_routes": [
+      {
+        "destination": "10.0.0.0/16",
+        "state": "pending",
+        "type": "static",
+        "description": "Remote Tokyo VPC via TGW peering"
+      },
+      {
+        "destination": "10.1.0.0/16",
+        "state": "active",
+        "type": "propagated",
+        "description": "Local São Paulo VPC"
+      }
+    ],
+    "vpc_peering_connections": 0,
+    "proof": "Transit Gateway peering pending; no VPC peering exists."
+  },
+  "edge_security_compliance": {
+    "status": "PENDING",
+    "cloudfront": {
+      "distribution_id": null,
+      "domain_name": null,
+      "status": "NOT_DEPLOYED",
+      "waf_attached": false,
+      "logging_enabled": false,
+      "log_bucket": "chrisbarm-cloudfront-logs-198547498722",
+      "log_prefix": "saopaulo-cf/"
+    },
+    "waf": {
+      "web_acl_name": "liberdade-waf-acl",
+      "web_acl_id": "e4373b5b-cadf-4242-aaf7-d1906d6d1b54",
+      "scope": "CLOUDFRONT",
+      "region": "us-east-1",
+      "rules": [
+        {
+          "name": "RateLimitRule",
+          "priority": 1,
+          "action": "BLOCK",
+          "type": "rate-based",
+          "limit": "2000 requests per 5 minutes per IP"
+        },
+        {
+          "name": "AWSManagedRulesCommonRuleSet",
+          "priority": 2,
+          "action": "MANAGED",
+          "type": "managed-rule-group",
+          "vendor": "AWS",
+          "protections": "OWASP Top 10"
+        },
+        {
+          "name": "AWSManagedRulesKnownBadInputsRuleSet",
+          "priority": 3,
+          "action": "MANAGED",
+          "type": "managed-rule-group",
+          "vendor": "AWS",
+          "protections": "CVE patterns"
+        }
+      ],
+      "logging_destination": "CloudWatch Logs",
+      "log_group": "aws-waf-logs-liberdade",
+      "retention_days": 90
+    },
+    "origin_protection": {
+      "custom_header_name": "X-Origin-Verify",
+      "custom_header_configured": true,
+      "alb_requires_header": true,
+      "direct_alb_access": "BLOCKED"
+    },
+    "proof": "WAF exists; CloudFront distribution pending. Origin protection via custom headers configured."
+  },
+  "audit_logging_compliance": {
+    "status": "COMPLIANT",
+    "cloudtrail": {
+      "tokyo_trail": {
+        "name": "chrisbarm-audit-trail-tokyo",
+        "region": "ap-northeast-1",
+        "status": "ACTIVE",
+        "management_events": true,
+        "global_service_events": true,
+        "log_file_validation": true,
+        "s3_bucket": "chrisbarm-cloudtrail-logs-198547498722",
+        "s3_prefix": "tokyo/"
+      },
+      "sao_paulo_trail": {
+        "name": "liberdade-audit-trail-saopaulo",
+        "region": "sa-east-1",
+        "status": "ACTIVE",
+        "management_events": true,
+        "global_service_events": false,
+        "log_file_validation": true,
+        "s3_bucket": "chrisbarm-cloudtrail-logs-198547498722",
+        "s3_prefix": "saopaulo/"
+      }
+    },
+    "log_retention": {
+      "s3_bucket": "chrisbarm-cloudtrail-logs-198547498722",
+      "bucket_region": "ap-northeast-1",
+      "versioning": "ENABLED",
+      "lifecycle_policy": {
+        "days_0_to_90": "S3 Standard",
+        "days_90_to_2555": "S3 Glacier Deep Archive",
+        "days_2555_plus": "Expiration (7 years)"
+      },
+      "retention_years": 7
+    },
+    "vpc_flow_logs": {
+      "tokyo": {
+        "flow_log_id": "fl-0f88a9bd10d111060",
+        "vpc_id": "vpc-03ae1927139f96a36",
+        "destination": "chrisbarm-flowlogs-198547498722",
+        "traffic_type": "ALL"
+      },
+      "sao_paulo": {
+        "flow_log_id": "fl-09c3c10ba8ed0bd81",
+        "vpc_id": "vpc-0fffd14d34d9447d9",
+        "destination": "chrisbarm-flowlogs-198547498722",
+        "traffic_type": "ALL"
+      }
+    },
+    "proof": "CloudTrail captures all management events. Log file validation ensures immutability. 7-year retention satisfies regulatory requirements."
+  },
+  "compliance_summary": {
+    "total_checks": 5,
+    "passed_checks": 3,
+    "failed_checks": 0,
+    "compliance_percentage": 60,
+    "findings": [
+      {
+        "category": "Data Residency",
+        "status": "PASS",
+        "evidence": "RDS only in Tokyo, zero instances in other regions"
+      },
+      {
+        "category": "Network Corridor",
+        "status": "PENDING",
+        "evidence": "Transit Gateway peering not created yet; routes pending"
+      },
+      {
+        "category": "Edge Security",
+        "status": "PENDING",
+        "evidence": "WAF exists; CloudFront distribution not deployed yet"
+      },
+      {
+        "category": "Audit Trail",
+        "status": "PASS",
+        "evidence": "CloudTrail active in both regions with 7-year retention"
+      },
+      {
+        "category": "Log Centralization",
+        "status": "PASS",
+        "evidence": "All logs stored in Tokyo S3 buckets with versioning"
+      }
+    ],
+    "overall_compliance": "IN_PROGRESS",
+    "appi_requirements_met": false
+  },
+  "evidence_files": [
+    "00_architecture-summary.md",
+    "01_data-residency-proof.txt",
+    "02_edge-proof-cloudfront.txt",
+    "03_waf-proof.txt",
+    "04_cloudtrail-change-proof.txt",
+    "05_network-corridor-proof.txt",
+    "evidence.json"
+  ],
+  "auditor_contact": {
+    "submission_date": "2026-02-15",
+    "lab_number": "3B",
+    "project_name": "Armageddon",
+    "architecture_principle": "Compute Travels, Data Stays"
+  }
+}
